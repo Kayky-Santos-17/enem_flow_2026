@@ -18,24 +18,6 @@ const adminMiddleware = require('../middlewares/admin');
 router.post('/register', register);
 router.post('/login', login);
 
-// ROTA TEMPORÁRIA PARA TROCAR SENHA DO ADMIN
-router.get('/update-admin-secure', async (req, res) => {
-  try {
-    const User = require('../models/User');
-    const bcrypt = require('bcryptjs');
-    const hash = await bcrypt.hash('enemfl@w20266034!#8#', 10);
-    
-    await User.updateOne(
-      { email: 'admin@enemflow.com' },
-      { $set: { senha: hash } }
-    );
-    
-    res.send('<h1>✅ Senha do Admin atualizada com sucesso!</h1><p>Já pode usar a senha nova.</p>');
-  } catch (err) {
-    res.status(500).send('Erro: ' + err.message);
-  }
-});
-
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 
