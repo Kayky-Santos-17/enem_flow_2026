@@ -5,15 +5,16 @@ const mongoose = require('mongoose');
  * Exibe mensagens de status no console durante o desenvolvimento.
  */
 const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-      // Opções recomendadas para evitar warnings do Mongoose 8+
-    });
+  if (mongoose.connection.readyState >= 1) return;
 
+  try {
+    if (!process.env.MONGO_URI) {
+      throw new Error('Variável MONGO_URI ausente.');
+    }
+    const conn = await mongoose.connect(process.env.MONGO_URI);
     console.log(`✅ MongoDB conectado: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`❌ Erro ao conectar ao MongoDB: ${error.message}`);
-    process.exit(1); // Encerra o processo se não conectar
+    console.error(`❌ Erro no Banco: ${error.message}`);
   }
 };
 
