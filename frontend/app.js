@@ -100,6 +100,19 @@ const App = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  // --- SEGURANÇA: Trava de Sessão de 12 Horas ---
+  const lastAccess = localStorage.getItem('enemflow_last_access');
+  const now = Date.now();
+  const TWELVE_HOURS = 12 * 60 * 60 * 1000; // 12h em milissegundos
+
+  if (lastAccess && (now - parseInt(lastAccess)) > TWELVE_HOURS) {
+    console.log('Sessão expirada por inatividade (12h).');
+    App.logout();
+    return;
+  }
+  // Atualiza o timestamp de acesso
+  localStorage.setItem('enemflow_last_access', now.toString());
+
   // Inicializar Tema
   const savedTheme = localStorage.getItem('enemflow_theme');
   if (savedTheme === 'light') {
@@ -110,6 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (token) {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
+      
+      // Atualiza o tempo de acesso no login
+      localStorage.setItem('enemflow_last_access', Date.now().toString());
+
       if (payload.role === 'admin' && !window.location.href.includes('admin.html')) {
         const nav = document.querySelector('nav');
         const mobileAdminContainer = document.getElementById('adminMobileBtn');

@@ -653,7 +653,7 @@ input:focus, select:focus {
     filter: drop-shadow(0 0 8px var(--primary));
   }
 
-  /* Top Bar de Ações (Logo + Sair + Admin) */
+  /* Top Bar de Ações (Apenas Logo e Admin) */
   .mobile-top-actions {
     display: flex !important;
     position: sticky;
@@ -662,45 +662,43 @@ input:focus, select:focus {
     padding: 15px 20px;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
-    justify-content: space-between;
+    justify-content: center; /* Centraliza o logo no mobile */
     align-items: center;
   }
 
+  .mobile-only-btn {
+    display: block !important;
+  }
+
+  .mobile-top-actions .btn-danger {
+    display: none !important; /* Remove o botão de sair do topo */
+  }
+
   .main-content {
-    padding: 1.5rem 1rem;
-    padding-bottom: 120px; /* Espaço para a barra flutuante */
+    padding: 1.5rem 1.25rem; /* Mais espaço nas laterais */
+    padding-bottom: 120px; 
   }
 
-  /* Grid e Cards */
-  .grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.5rem;
-  }
-
-  .card {
-    padding: 1.5rem;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-
-  /* LOGIN MOBILE - REDESIGN */
+  /* LOGIN MOBILE - CENTRALIZADO E LINDO */
   .auth-container {
-    padding: 15px;
+    padding: 20px;
     background: var(--bg);
-  }
-
-  .auth-hero {
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
   }
 
   .auth-form-wrapper {
     width: 100%;
-    border: none;
-    padding: 2.5rem 1.5rem;
-    background: rgba(255,255,255,0.02);
-    border-radius: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    margin-top: 20px;
+    max-width: 400px; /* Garante que não estique demais */
+    border: 1px solid var(--border);
+    padding: 3rem 2rem;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(15px);
+    border-radius: 32px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    margin: 0 auto; /* Centraliza horizontalmente */
   }
 
   .auth-form-wrapper h1 {
