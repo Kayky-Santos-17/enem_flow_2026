@@ -14,8 +14,16 @@ const app = express();
 // Middlewares globais
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// ── Servir Uploads ──────────────────────────────────────────────────────────
 const path = require('path');
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, 'uploads');
+
+// Só tenta criar a pasta se não estiver em produção (evita erro na Vercel)
+if (process.env.NODE_ENV !== 'production' && !fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+app.use('/uploads', express.static(uploadsDir));
 app.use(helmet());
 app.use(
   cors({
