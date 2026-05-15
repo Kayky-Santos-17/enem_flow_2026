@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EnemFlow - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="page-enter"></div>
+
+  <div class="app-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span class="text-gradient" style="font-family: 'Outfit'; font-weight: 800;">EnemFlow</span>
+      </div>
+
+      <nav style="flex: 1;">
+        <a href="dashboard.html" class="nav-link active">
+          <svg viewBox="0 0 24 24">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Home
+        </a>
+        <a href="progresso.html" class="nav-link">
+          <svg viewBox="0 0 24 24">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+          Progresso
+        </a>
+        <a href="anotacoes.html" class="nav-link">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          Anotações
+        </a>
+        <a href="perfil.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          Meu Perfil
+        </a>
+      </nav>
+
+      <button onclick="App.logout()" class="btn btn-danger"
+        style="margin-top: auto; justify-content: flex-start; padding-left: 16px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        Sair da conta
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <header class="topbar">
+        <div class="user-profile" style="cursor: pointer;" onclick="window.location.href='perfil.html'">
+          <div class="avatar" id="avatarLetter" style="background-size: cover; background-position: center;">?</div>
+          <div>
+            <h2 id="userName" style="font-size: 1.4rem; line-height: 1.2;">Carregando...</h2>
+            <p class="text-muted">Pronto para dominar o conteúdo de hoje?</p>
+          </div>
+        </div>
+
+        <div class="xp-badge">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span id="userXP">0</span> XP Acumulado
+        </div>
+      </header>
+
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+          <div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 4px;">Trilha de Missões</h3>
+            <p class="text-muted">Escolha um tópico para entrar em Foco.</p>
+          </div>
+        </div>
+
+        <div id="content-list" class="grid">
+          <!-- Renderizado via JS -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if (!App.getToken()) window.location.href = 'login.html';
+
+    async function loadProfile() {
+      try {
+        const user = await App.api('/auth/me');
+        document.getElementById('userName').innerText = user.nome;
+        
+        const avatarDiv = document.getElementById('avatarLetter');
+        if (user.avatarUrl) {
+          avatarDiv.style.backgroundImage = `url(${user.avatarUrl})`;
+          avatarDiv.innerText = '';
+        } else {
+          avatarDiv.innerText = user.nome.charAt(0).toUpperCase();
+        }
+
+        document.getElementById('userXP').innerText = user.xp;
+
+        
+
+      } catch (err) {
+        if (err.message.includes('Sessão') || err.message.includes('Token')) App.logout();
+      }
+    }
+
+    async function loadContents() {
+      try {
+        const listContainer = document.getElementById('content-list');
+        listContainer.innerHTML = '<p class="text-muted">Buscando inteligência no servidor...</p>';
+
+        const contents = await App.api('/contents');
+
+        if (contents.length === 0) {
+          listContainer.innerHTML = '<p class="text-muted">Nenhum conteúdo disponível. O Admin ainda não publicou as aulas.</p>';
+          return;
+        }
+
+        const grouped = {};
+        contents.forEach(c => {
+          const m = c.materia || 'Outros';
+          const a = c.assunto || 'Geral';
+          const s = c.subassunto || '';
+
+          if (!grouped[m]) grouped[m] = {};
+          if (!grouped[m][a]) grouped[m][a] = {};
+          if (!grouped[m][a][s]) grouped[m][a][s] = [];
+
+          grouped[m][a][s].push(c);
+        });
+
+        let html = '';
+        for (const m in grouped) {
+          html += `<div class="materia-block" style="margin-bottom: 3rem; background: var(--dashboard-bg1); padding: 2rem; border-radius: 16px; border: 1px solid var(--border);">
+                     <h2 class="text-gradient" style="font-size: 2rem; margin-bottom: 1.5rem; display: inline-block;">${m}</h2>`;
+          
+          for (const a in grouped[m]) {
+            html += `<div class="assunto-block" style="margin-left: 0.5rem; margin-bottom: 2rem; border-left: 2px solid var(--dashboard-bg2); padding-left: 1.5rem;">
+                       <h3 style="font-size: 1.5rem; color: var(--text); margin-bottom: 1.2rem; font-weight: 600;">${a}</h3>`;
+                       
+            for (const s in grouped[m][a]) {
+              if (s !== 'Geral' && s !== '') {
+                html += `<h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 1rem; margin-left: 0.5rem; font-weight: 500;">➤ ${s}</h4>`;
+              }
+              
+              html += `<div class="grid" style="margin-left: 0.5rem; margin-bottom: 1.5rem;">`;
+              grouped[m][a][s].forEach(c => {
+                html += `
+                  <div class="card content-card" onclick="openStudy('${c._id}', '${c.titulo}', '${c.url || ''}')" style="background: var(--dashboard-bg3);">
+                    <span class="tag" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc;">${c.tipo.toUpperCase()}</span>
+                    <h3 style="margin-bottom: 8px; font-size: 1.2rem;">${c.titulo}</h3>
+                    <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                      ${c.descricao || 'Nenhuma descrição fornecida.'}
+                    </p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; margin-top: auto;">
+                      <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 4px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        ${c.tempoMedio} min
+                      </span>
+                      <span style="color: var(--primary); font-size: 0.85rem; font-weight: 600;">Iniciar &rarr;</span>
+                    </div>
+                  </div>
+                `;
+              });
+              html += `</div>`;
+            }
+            html += `</div>`;
+          }
+          html += `</div>`;
+        }
+        
+        listContainer.innerHTML = html;
+        listContainer.classList.remove('grid');
+
+      } catch (err) {
+        App.showToast('Falha ao sincronizar conteúdos.', true);
+      }
+    }
+
+    function openStudy(id, titulo, url) {
+      localStorage.setItem('currentContentId', id);
+      localStorage.setItem('currentContentTitle', titulo);
+      localStorage.setItem('currentContentUrl', url);
+      window.location.href = 'study.html';
+    }
+
+    loadProfile();
+    loadContents();
+  </script>
+</body>
+
+</html>
+

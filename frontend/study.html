@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EnemFlow - Modo Imersivo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-enter"></div>
+  
+  <div class="study-container" style="display: grid; grid-template-columns: 1fr 350px; height: 100vh; overflow: hidden; background: var(--bg);">
+    
+    <!-- Ãrea Esquerda: O PDF ou Vídeo (Conteúdo Real) -->
+    <div id="content-frame-container" style="background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column;">
+      <div style="padding: 1rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
+        <h1 id="contentTitle" style="font-size: 1.5rem;" class="text-gradient">Carregando Missão...</h1>
+        <button onclick="window.location.href='dashboard.html'" class="btn" style="background: var(--dashboard-bg2); border: 1px solid var(--border); padding: 8px 16px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; color: var(--text-muted); transition: all 0.3s; width: auto; height: auto;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Voltar ao Painel
+        </button>
+      </div>
+      <div id="media-container" style="flex: 1; position: relative; width: 100%; height: 100%; overflow: hidden;">
+        <!-- O Iframe entrará aqui -->
+        <div id="no-media-text" style="display: flex; height: 100%; align-items: center; justify-content: center;">
+          <p class="text-muted" style="text-align: center; max-width: 400px;">
+            Este conteúdo não possui um material de apoio anexado. Foco no seu caderno!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ãrea Direita: O CronÃ´metro Imersivo -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; background: radial-gradient(circle at center, var(--bg-panel) 0%, var(--bg) 100%);">
+      
+      <span class="tag" style="background: rgba(99, 102, 241, 0.2); color: var(--primary); margin-bottom: 2rem;">Modo Foco Ativado</span>
+
+      <!-- Círculo do CronÃ´metro -->
+      <div class="timer-circle" id="timer-circle" style="width: 250px; height: 250px; margin-bottom: 3rem;">
+        <div class="timer-display" id="display" style="font-size: 3.5rem;">00:00:00</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 250px;">
+        <button id="startBtn" class="btn btn-primary" onclick="startStudy()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Iniciar Foco
+        </button>
+
+        <button id="stopBtn" class="btn btn-danger" onclick="stopStudy()" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+          Encerrar Sessão
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if(!App.getToken()) window.location.href = 'login.html';
+
+    const contentId = localStorage.getItem('currentContentId');
+    const contentTitle = localStorage.getItem('currentContentTitle');
+    const contentUrl = localStorage.getItem('currentContentUrl');
+
+    if(!contentId) {
+      window.location.href = 'dashboard.html';
+    }
+
+    document.getElementById('contentTitle').innerText = contentTitle || 'Matéria Desconhecida';
+
+    // Injeta o iframe se a URL existir
+    if (contentUrl && contentUrl.trim() !== '') {
+      document.getElementById('no-media-text').style.display = 'none';
+      const iframe = document.createElement('iframe');
+      
+      // Se for YouTube, converte para versão embed
+      let finalUrl = contentUrl;
+      if (contentUrl.includes('youtube.com/watch?v=')) {
+        finalUrl = contentUrl.replace('watch?v=', 'embed/');
+      }
+      
+      iframe.src = finalUrl;
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      document.getElementById('media-container').appendChild(iframe);
+    }
+
+    let timerInterval;
+    let secondsElapsed = 0;
+    let serverStartTime = null;
+
+    function updateDisplay() {
+      const h = Math.floor(secondsElapsed / 3600).toString().padStart(2, '0');
+      const m = Math.floor((secondsElapsed % 3600) / 60).toString().padStart(2, '0');
+      const s = (secondsElapsed % 60).toString().padStart(2, '0');
+      document.getElementById('display').innerText = `${h}:${m}:${s}`;
+    }
+
+    async function startStudy() {
+      try {
+        const data = await App.api('/study/start', { method: 'POST' });
+        serverStartTime = data.startTime;
+
+        document.getElementById('startBtn').style.display = 'none';
+        document.getElementById('stopBtn').style.display = 'flex';
+        document.querySelector('.study-container').classList.add('timer-active');
+
+        timerInterval = setInterval(() => {
+          secondsElapsed++;
+          updateDisplay();
+        }, 1000);
+
+        App.showToast('Sessão iniciada! Foco total na missão.');
+      } catch (err) {
+        if(err.message.includes('Sessão')) {
+            App.logout();
+        } else {
+            App.showToast(err.message, true);
+        }
+      }
+    }
+
+    async function stopStudy() {
+      clearInterval(timerInterval);
+      document.getElementById('stopBtn').innerHTML = 'Calculando XP...';
+      document.getElementById('stopBtn').disabled = true;
+      document.querySelector('.study-container').classList.remove('timer-active');
+
+      try {
+        const data = await App.api('/study/end', {
+          method: 'POST',
+          body: JSON.stringify({
+            startTime: serverStartTime,
+            contentId: contentId
+          })
+        });
+
+        localStorage.removeItem('currentContentId');
+        localStorage.removeItem('currentContentTitle');
+        localStorage.removeItem('currentContentUrl');
+
+        App.showToast(`Missão Concluída! +${data.xpGanho} XP!`);
+        
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+
+      } catch (err) {
+        App.showToast('Erro ao sincronizar com o servidor: ' + err.message, true);
+        document.getElementById('stopBtn').innerText = 'Tentar Novamente';
+        document.getElementById('stopBtn').disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
+

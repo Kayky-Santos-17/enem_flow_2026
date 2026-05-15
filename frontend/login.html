@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EnemFlow - Acessar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="auth-container">
+    
+    <!-- Lado Esquerdo: Arte Premium -->
+    <div class="auth-hero">
+      <div style="z-index: 10;">
+        <h1 style="font-size: 4rem; margin-bottom: 1rem; line-height: 1.1;">
+          Domine o <span class="text-gradient">ENEM</span><br>como um mestre.
+        </h1>
+        <p class="text-muted" style="font-size: 1.2rem; max-width: 500px; margin: 0 auto;">
+          Uma plataforma de estudos imersiva, gamificada e focada em resultados. Esqueça as abas perdidas e entre no estado de flow.
+        </p>
+      </div>
+    </div>
+
+    <!-- Lado Direito: Formulário -->
+    <div class="auth-form-wrapper">
+      <div style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 2rem; margin-bottom: 0.5rem;" id="form-title">Acesse sua conta</h2>
+        <p class="text-muted" id="form-subtitle">Bem-vindo de volta, futuro aprovado.</p>
+      </div>
+
+      <form id="auth-form">
+        <div class="input-group" id="nomeGroup" style="display: none;">
+          <input type="text" id="nomeInput" placeholder="Seu Nome Completo">
+        </div>
+        
+        <div class="input-group">
+          <input type="email" id="emailInput" placeholder="Endereço de E-mail" required>
+        </div>
+
+        <div class="input-group" style="position: relative;">
+          <input type="password" id="senhaInput" placeholder="Sua Senha Mestra" required style="padding-right: 45px;">
+          <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg id="eye-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <div style="text-align: right; margin-bottom: 1.5rem;" id="forgotPassArea">
+          <button type="button" class="btn-link" onclick="forgotPassword()" style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.8; background: none; border: none; cursor: pointer;">Esqueci minha senha</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          Entrar na Plataforma
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </button>
+      </form>
+
+      <!-- Erro bonitinho embaixo -->
+      <div id="login-error" class="error-msg"></div>
+
+      <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <span class="text-muted" id="toggleTextMsg">Ainda não iniciou sua jornada?</span><br>
+        <button type="button" class="btn" id="toggleModeBtn" onclick="toggleMode()" style="margin-top: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text);">Criar uma nova conta gratuita</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Overlay de Transição -->
+  <div id="page-transition" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg); z-index: 99999; transform: translateY(100%); transition: transform 1.5s cubic-bezier(0.76, 0, 0.24, 1); display: flex; align-items: center; justify-content: center; flex-direction: column;">
+    <div class="timer-circle" style="width: 100px; height: 100px; box-shadow: 0 0 20px var(--primary); margin-bottom: 20px; animation: pulse 1s infinite alternate; border-radius: 50%;"></div>
+    <h2 class="text-gradient" style="font-size: 2.5rem;">Iniciando Flow...</h2>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if(App.getToken()) window.location.href = 'dashboard.html';
+
+    let isLogin = true;
+
+    function toggleMode() {
+      document.getElementById('login-error').style.opacity = '0';
+      isLogin = !isLogin;
+      
+      document.getElementById('nomeGroup').style.display = isLogin ? 'none' : 'block';
+      document.getElementById('nomeInput').required = !isLogin;
+
+      document.getElementById('form-title').innerText = isLogin ? 'Acesse sua conta' : 'Criar nova conta';
+      document.getElementById('form-subtitle').innerText = isLogin ? 'Bem-vindo de volta, futuro aprovado.' : 'O primeiro passo rumo à universidade.';
+      
+      document.getElementById('submitBtn').innerHTML = isLogin 
+        ? 'Entrar na Plataforma <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>' 
+        : 'Começar Jornada <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>';
+      
+      document.getElementById('toggleTextMsg').innerText = isLogin ? 'Ainda não iniciou sua jornada?' : 'Já possuo uma conta';
+      document.getElementById('toggleModeBtn').innerText = isLogin ? 'Criar uma nova conta gratuita' : 'Fazer Login';
+      document.getElementById('forgotPassArea').style.display = isLogin ? 'block' : 'none';
+    }
+
+    async function forgotPassword() {
+      const email = document.getElementById('emailInput').value;
+      if (!email) return App.showToast('Digite seu e-mail no campo acima primeiro.', true);
+
+      try {
+        const res = await App.api('/auth/forgot-password', {
+          method: 'POST',
+          body: JSON.stringify({ email })
+        });
+        App.showToast(res.message);
+      } catch (err) {
+        App.showToast(err.message, true);
+      }
+    }
+
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('emailInput').value;
+      const senha = document.getElementById('senhaInput').value;
+      const nome = document.getElementById('nomeInput').value;
+
+      const endpoint = isLogin ? '/auth/login' : '/auth/register';
+      const body = isLogin ? { email, senha } : { nome, email, senha };
+
+      try {
+        document.getElementById('login-error').style.opacity = '0';
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').innerText = 'Autenticando...';
+
+        const data = await App.api(endpoint, {
+          method: 'POST',
+          body: JSON.stringify(body)
+        });
+
+        App.setToken(data.token);
+        
+        // Transição Bonita e mais lenta
+        document.getElementById('page-transition').style.transform = 'translateY(0)';
+        
+        const urlDestino = data.user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+        setTimeout(() => window.location.href = urlDestino, 1500);
+
+      } catch (err) {
+        const errorDiv = document.getElementById('login-error');
+        errorDiv.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> ${err.message}`;
+        errorDiv.style.opacity = '1';
+        
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('submitBtn').innerHTML = isLogin 
+        ? 'Entrar na Plataforma <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>' 
+        : 'Começar Jornada <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>';
+      }
+    });
+    function togglePasswordVisibility() {
+      const passInput = document.getElementById('senhaInput');
+      const eyeIcon = document.getElementById('eye-icon');
+      
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+      } else {
+        passInput.type = 'password';
+        eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      }
+    }
+  </script>
+</body>
+</html>
