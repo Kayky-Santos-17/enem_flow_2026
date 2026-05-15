@@ -74,8 +74,9 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('[auth.register]', error);
-    res.status(500).json({ error: 'Erro ao criar usuário.' });
+    console.error('❌ [ERRO NO REGISTRO]:', error.message);
+    console.error('📋 STACK:', error.stack);
+    res.status(500).json({ error: 'Erro ao criar conta.' });
   }
 };
 
@@ -127,8 +128,9 @@ exports.login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('[auth.login]', error);
-    res.status(500).json({ error: 'Erro ao fazer login.' });
+    console.error('❌ [ERRO NO LOGIN]:', error.message);
+    console.error('📋 STACK:', error.stack);
+    res.status(500).json({ error: 'Erro interno ao processar login.' });
   }
 };
 
