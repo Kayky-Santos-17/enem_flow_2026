@@ -62,8 +62,7 @@ app.use((req, res) => {
 
 // ── Handler de erros globais ──────────────────────────────────────────────────
 app.use((err, req, res, next) => {
-  console.error('❌ ERRO IDENTIFICADO:', err.message);
-  console.error('📋 STACK TRACE:', err.stack);
+  console.error('[GlobalError]', err.stack);
   res.status(500).json({ error: 'Erro interno do servidor.' });
 });
 

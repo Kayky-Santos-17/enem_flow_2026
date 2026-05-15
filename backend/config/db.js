@@ -12,12 +12,7 @@ const connectDB = async () => {
       throw new Error('Variável MONGO_URI ausente.');
     }
     const conn = await mongoose.connect(process.env.MONGO_URI);
-    const host = conn.connection.host || 'Host Desconhecido';
-    console.log(`✅ MongoDB conectado: ${host}`);
-    
-    if (!conn.connection.host) {
-      console.log(`⚠️ URI Utilizada: ${process.env.MONGO_URI.substring(0, 20)}...`);
-    }
+    console.log(`✅ MongoDB conectado: ${conn.connection.host}`);
   } catch (error) {
     console.error(`❌ Erro no Banco: ${error.message}`);
   }
