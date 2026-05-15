@@ -6,8 +6,11 @@ const auth = require('../middlewares/auth');
 
 // Certifique-se de que a pasta existe
 const uploadDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+// Cria a pasta de uploads se não existir (apenas em desenvolvimento)
+if (process.env.NODE_ENV !== 'production') {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+  }
 }
 
 const storage = multer.diskStorage({
