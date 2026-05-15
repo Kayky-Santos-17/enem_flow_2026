@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 
 // ── Conexão com MongoDB ──────────────────────────────────────────────────────
@@ -37,10 +38,6 @@ app.use(
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
-
-// ── Servir Uploads ──────────────────────────────────────────────────────────
-const path = require('path');
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Health check
 app.get('/health', (req, res) => {
