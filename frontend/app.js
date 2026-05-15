@@ -35,7 +35,16 @@ const App = {
         headers,
       });
       
-      const data = await response.json();
+      // Tenta ler como JSON, mas se falhar (ex: erro 500 da Vercel), captura o erro
+      const contentType = response.headers.get("content-type");
+      let data;
+      
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await response.json();
+      } else {
+        // Se não for JSON, o servidor provavelmente caiu ou deu erro 500
+        throw new Error('O servidor encontrou um problema técnico. Tente novamente em instantes.');
+      }
       
       if (!response.ok) {
         throw new Error(data.error || 'Ocorreu um erro inesperado na requisição.');
@@ -45,10 +54,13 @@ const App = {
     } catch (error) {
       console.error('API Error:', error);
       
-      // Tradução de erros comuns de rede para Português
       let msg = error.message;
-      if (msg === 'Failed to fetch' || msg.includes('NetworkError')) {
-        msg = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+      
+      // Tradução de erros técnicos para mensagens amigáveis
+      if (msg.includes('Unexpected token') || msg.includes('is not valid JSON')) {
+        msg = 'O sistema está temporariamente instável. Verifique sua conexão ou tente mais tarde.';
+      } else if (msg === 'Failed to fetch' || msg.includes('NetworkError')) {
+        msg = 'Não foi possível conectar ao servidor. Verifique se você está online.';
       }
       
       throw new Error(msg);
@@ -63,10 +75,10 @@ const App = {
     const toast = document.createElement('div');
     toast.id = 'premium-toast';
     
-    // Design Premium do Toast
+    // Design Premium Ultra do Toast
     const icon = isError 
-      ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>' 
-      : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>' 
+      : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
     
     toast.innerHTML = `
       <div class="toast-icon ${isError ? 'error' : 'success'}">${icon}</div>
@@ -82,8 +94,8 @@ const App = {
     if(window.toastTimer) clearTimeout(window.toastTimer);
     window.toastTimer = setTimeout(() => {
       toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 500);
-    }, 4000);
+      setTimeout(() => toast.remove(), 600);
+    }, 5000); // 5 segundos para o usuário ler com calma
   }
 };
 
