@@ -31,6 +31,12 @@ router.post('/', auth, upload.single('file'), (req, res) => {
     return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
   }
   
+  // Vercel serverless functions have a read-only filesystem except for /tmp.
+  // Files stored in /tmp are lost between requests. 
+  if (process.env.VERCEL) {
+    return res.status(400).json({ error: 'Upload de arquivos locais não é suportado na Vercel. Por favor, use a opção de "Link externo" ou hospede o backend em um VPS/Render.' });
+  }
+
   // Retorna a URL pública
   const url = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
   res.json({ url });

@@ -11,38 +11,42 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/auth/?(.*)",
-      "dest": "backend/server.js"
+      "source": "/auth/(.*)",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/contents/?(.*)",
-      "dest": "backend/server.js"
+      "source": "/contents",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/study/?(.*)",
-      "dest": "backend/server.js"
+      "source": "/contents/(.*)",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/ai/?(.*)",
-      "dest": "backend/server.js"
+      "source": "/study/(.*)",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/upload/?(.*)",
-      "dest": "backend/server.js"
+      "source": "/ai/(.*)",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/health",
-      "dest": "backend/server.js"
+      "source": "/upload",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/",
-      "dest": "frontend/login.html"
+      "source": "/health",
+      "destination": "/backend/server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
+      "source": "/",
+      "destination": "/frontend/login.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
     }
   ]
 }
