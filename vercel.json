@@ -13,23 +13,23 @@
   ],
   "routes": [
     {
-      "src": "/auth/(.*)",
+      "src": "/auth/?(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/contents/(.*)",
+      "src": "/contents/?(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/study/(.*)",
+      "src": "/study/?(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/ai/(.*)",
+      "src": "/ai/?(.*)",
       "dest": "backend/server.js"
     },
     {
-      "src": "/upload/(.*)",
+      "src": "/upload/?(.*)",
       "dest": "backend/server.js"
     },
     {
