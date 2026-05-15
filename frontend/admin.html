@@ -226,7 +226,7 @@
         `).join('');
 
       } catch (err) {
-        App.showToast('Falha crítica de leitura do banco.', true);
+        App.showToast('Erro ao carregar o banco: Verifique a conexão com o servidor.', true);
       }
     }
 
@@ -326,7 +326,13 @@
         document.getElementById('arquivoUpload').dispatchEvent(new Event('change'));
         loadAdminContents();
       } catch (err) {
-        App.showToast(err.message, true);
+        let msg = err.message;
+        if (msg.includes('Unexpected token') || msg.includes('is not valid JSON')) {
+          msg = 'Erro de comunicação: O servidor pode estar reiniciando ou offline. Tente novamente.';
+        } else if (msg === 'Failed to fetch' || msg.includes('NetworkError')) {
+          msg = 'Sem conexão com o servidor. Verifique sua rede.';
+        }
+        App.showToast(msg, true);
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerText = 'Fazer Deploy';
