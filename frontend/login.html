@@ -8,21 +8,23 @@
 </head>
 <body>
 
-  <div class="auth-container">
-    <!-- Logo Mobile -->
-    <div class="mobile-top-actions" style="display: none;">
-      <div class="sidebar-logo">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="url(#gradAuth)" stroke-width="2.5">
-          <defs>
-            <linearGradient id="gradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-        </svg>
-      </div>
+  <!-- Mobile Top Bar (outside auth-container for proper layout) -->
+  <div class="mobile-top-actions" style="display: none;">
+    <div class="sidebar-logo">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#gradAuth)" stroke-width="2.5">
+        <defs>
+          <linearGradient id="gradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </svg>
+      <span class="text-gradient" style="font-family: 'Outfit'; font-weight: 800; font-size: 1.3rem;">EnemFlow</span>
     </div>
+  </div>
+
+  <div class="auth-container">
     
     <!-- Lado Esquerdo: Arte Premium (Desktop) -->
     <div class="auth-hero">
@@ -111,8 +113,8 @@
       document.getElementById('nomeGroup').style.display = isLogin ? 'none' : 'block';
       document.getElementById('nomeInput').required = !isLogin;
 
-      document.getElementById('form-title').innerText = isLogin ? 'Acesse sua conta' : 'Criar nova conta';
-      document.getElementById('form-subtitle').innerText = isLogin ? 'Bem-vindo de volta, futuro aprovado.' : 'O primeiro passo rumo à universidade.';
+      document.getElementById('auth-title').innerText = isLogin ? 'Acesse sua conta' : 'Criar nova conta';
+      document.getElementById('auth-subtitle').innerText = isLogin ? 'Bem-vindo de volta, futuro aprovado.' : 'O primeiro passo rumo à universidade.';
       
       document.getElementById('submitBtn').innerHTML = isLogin 
         ? 'Entrar na Plataforma <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>' 
