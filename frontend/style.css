@@ -579,33 +579,34 @@ input:focus, select:focus {
 }
 
 @media (max-width: 768px) {
+  /* Estrutura Global Mobile */
   .app-container {
     flex-direction: column;
+    min-height: 100vh;
   }
   
+  /* Sidebar vira Bottom Navbar Flutuante */
   .sidebar {
-    width: 100% !important;
-    height: auto;
+    width: 90% !important;
+    height: 70px;
     flex-direction: row;
-    padding: 0.8rem 0.5rem;
+    padding: 0 15px;
     position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 999;
+    bottom: 20px; 
+    left: 5%; 
+    right: 5%;
+    z-index: 1000;
     justify-content: space-around;
-    border-right: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(20, 20, 25, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    background: rgba(15, 15, 20, 0.7);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    display: flex !important;
   }
 
-  .sidebar-logo, .btn-danger {
-    display: none !important;
-  }
-
-  /* Oculta separadores do menu criados via JS */
-  nav div {
+  .sidebar-logo, .sidebar .btn-danger {
     display: none !important;
   }
 
@@ -615,86 +616,135 @@ input:focus, select:focus {
     width: 100%;
     justify-content: space-around;
     align-items: center;
+    height: 100%;
   }
 
+  /* Links da Barra Inferior */
   .nav-link {
     flex-direction: column;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 8px 12px;
-    gap: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 10px;
+    gap: 4px;
     margin: 0;
-    border-radius: 16px;
+    border-radius: 12px;
     color: var(--text-muted);
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: transparent !important;
+    min-width: 60px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .nav-link svg {
     width: 22px;
     height: 22px;
+    opacity: 0.7;
+    transition: 0.3s;
   }
 
   .nav-link.active {
-    background: transparent;
     color: var(--primary);
   }
 
   .nav-link.active svg {
-    filter: drop-shadow(0px 0px 8px rgba(99, 102, 241, 0.8));
-    transform: translateY(-2px);
+    opacity: 1;
+    transform: translateY(-3px);
+    filter: drop-shadow(0 0 8px var(--primary));
+  }
+
+  /* Top Bar de Ações (Logo + Sair + Admin) */
+  .mobile-top-actions {
+    display: flex !important;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    padding: 15px 20px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    justify-content: space-between;
+    align-items: center;
   }
 
   .main-content {
-    padding: 1.5rem 1.2rem;
-    padding-bottom: 110px; /* Space for the bottom navbar */
+    padding: 1.5rem 1rem;
+    padding-bottom: 120px; /* Espaço para a barra flutuante */
   }
 
+  /* Grid e Cards */
   .grid {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
   }
 
   .card {
-    padding: 1.2rem;
-    border-radius: 16px;
+    padding: 1.5rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
   }
 
-  .topbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .topbar h2 {
-    font-size: 1.5rem !important;
+  /* LOGIN MOBILE - REDESIGN */
+  .auth-container {
+    padding: 15px;
+    background: var(--bg);
   }
 
-  .study-container .timer-circle {
-    width: 260px;
-    height: 260px;
-  }
-  .study-container .timer-display {
-    font-size: 4rem;
+  .auth-hero {
+    display: none;
   }
 
   .auth-form-wrapper {
     width: 100%;
-    border-left: none;
-    padding: 2rem 1.5rem;
-    box-shadow: none;
+    border: none;
+    padding: 2.5rem 1.5rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    margin-top: 20px;
   }
-  .auth-hero {
-    display: none;
+
+  .auth-form-wrapper h1 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .auth-form-wrapper p {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  /* Toast no Mobile (Centralizado) */
+  #premium-toast {
+    top: 20px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(-150%);
+    width: 90%;
+    max-width: none;
+  }
+
+  #premium-toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Ajustes de Elementos Específicos */
+  .timer-circle {
+    width: 280px !important;
+    height: 280px !important;
+  }
+  .timer-display {
+    font-size: 4.5rem !important;
+  }
+
+  .topbar {
+    margin-bottom: 1.5rem;
   }
   
-  .materia-block {
-    padding: 1.2rem !important;
-  }
-  
-  .assunto-block {
-    padding-left: 0.8rem !important;
-    margin-left: 0.2rem !important;
+  .user-profile {
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
   }
 }
 

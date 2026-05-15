@@ -112,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const payload = JSON.parse(atob(token.split('.')[1]));
       if (payload.role === 'admin' && !window.location.href.includes('admin.html')) {
         const nav = document.querySelector('nav');
+        const mobileAdminContainer = document.getElementById('adminMobileBtn');
+
+        // Versão Desktop
         if (nav && !document.getElementById('adminBackBtn')) {
           const sep = document.createElement('div');
           sep.style = 'margin-top: 15px; margin-bottom: 5px; border-top: 1px solid rgba(255,255,255,0.1);';
@@ -123,6 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
           adminLink.style.color = 'var(--primary)';
           adminLink.innerHTML = `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Voltar ao Master`;
           nav.appendChild(adminLink);
+        }
+
+        // Versão Mobile
+        if (mobileAdminContainer && !document.getElementById('adminMobileLink')) {
+          mobileAdminContainer.innerHTML = `
+            <a href="admin.html" id="adminMobileLink" class="btn" style="background: var(--primary); padding: 8px; border-radius: 10px; color: white;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            </a>
+          `;
         }
       }
     } catch(e) {}
