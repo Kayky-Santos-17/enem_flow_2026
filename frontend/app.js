@@ -1,7 +1,7 @@
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000'
+const host = window.location.hostname;
+const API_URL = window.location.port === '5500' || host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.')
+  ? `http://${host}:3000`
   : ''; // Vazio significa que ele usará o mesmo domínio que está servindo o site
-
 const App = {
   getToken: () => localStorage.getItem('token'),
   setToken: (token) => localStorage.setItem('token', token),
