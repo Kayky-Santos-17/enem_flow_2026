@@ -9,10 +9,10 @@
 <body>
 
   <div class="auth-container">
-    <!-- Logo Mobile (Aparece apenas no topo no celular) -->
-    <div class="mobile-top-actions" style="display: none; border-bottom: none; background: transparent;">
+    <!-- Logo Mobile -->
+    <div class="mobile-top-actions" style="display: none;">
       <div class="sidebar-logo">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#gradAuth)" stroke-width="2.5">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="url(#gradAuth)" stroke-width="2.5">
           <defs>
             <linearGradient id="gradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
@@ -21,28 +21,36 @@
           </defs>
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
         </svg>
-        <span class="text-gradient" style="font-family: 'Outfit'; font-weight: 800; font-size: 1.5rem; margin-left: 10px;">EnemFlow</span>
       </div>
     </div>
     
-    <!-- Lado Esquerdo: Arte Premium -->
+    <!-- Lado Esquerdo: Arte Premium (Desktop) -->
     <div class="auth-hero">
-      <div style="z-index: 10;">
-        <h1 style="font-size: 4rem; margin-bottom: 1rem; line-height: 1.1;">
-          Domine o <span class="text-gradient">ENEM</span><br>como um mestre.
-        </h1>
-        <p class="text-muted" style="font-size: 1.2rem; max-width: 500px; margin: 0 auto;">
-          Uma plataforma de estudos imersiva, gamificada e focada em resultados. Esqueça as abas perdidas e entre no estado de flow.
-        </p>
+      <div class="auth-hero-content">
+        <div class="sidebar-logo" style="margin-bottom: 2rem;">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="url(#gradHero)" stroke-width="2.5">
+            <defs>
+              <linearGradient id="gradHero" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span class="text-gradient" style="font-family: 'Outfit'; font-weight: 900; font-size: 3rem; margin-left: 15px;">EnemFlow</span>
+        </div>
+        <h1 class="text-gradient" style="color: white; -webkit-text-fill-color: initial; background: none;">Domine o ENEM<br>como um mestre.</h1>
+        <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 500px;">A única plataforma que une foco, gamificação e inteligência artificial para sua aprovação.</p>
       </div>
     </div>
 
-    <!-- Lado Direito: Formulário -->
+    <!-- Lado Direito: Formulário Glassmorphism -->
     <div class="auth-form-wrapper">
-      <div style="margin-bottom: 2.5rem;">
-        <h2 style="font-size: 2rem; margin-bottom: 0.5rem;" id="form-title">Acesse sua conta</h2>
-        <p class="text-muted" id="form-subtitle">Bem-vindo de volta, futuro aprovado.</p>
-      </div>
+      <div class="auth-card">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <h1 id="auth-title">Acesse sua conta</h1>
+          <p class="text-muted" id="auth-subtitle">Bem-vindo de volta, futuro aprovado.</p>
+        </div>
 
       <form id="auth-form">
         <div class="input-group" id="nomeGroup" style="display: none;">
@@ -80,9 +88,9 @@
         <span class="text-muted" id="toggleTextMsg">Ainda não iniciou sua jornada?</span><br>
         <button type="button" class="btn" id="toggleModeBtn" onclick="toggleMode()" style="margin-top: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text);">Criar uma nova conta gratuita</button>
       </div>
-    </div>
-
-  </div>
+    </div> <!-- Fim auth-card -->
+  </div> <!-- Fim auth-form-wrapper -->
+</div> <!-- Fim auth-container -->
 
   <!-- Overlay de Transição -->
   <div id="page-transition" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg); z-index: 99999; transform: translateY(100%); transition: transform 1.5s cubic-bezier(0.76, 0, 0.24, 1); display: flex; align-items: center; justify-content: center; flex-direction: column;">
