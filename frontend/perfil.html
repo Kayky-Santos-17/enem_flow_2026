@@ -184,7 +184,7 @@
           avatarDivTop.innerText = user.nome.charAt(0).toUpperCase();
         }
       } catch (err) {
-        if(err.message.includes('Sessão')) App.logout();
+        if(err.message.includes('Sessão') || err.message.includes('Token') || err.message.includes('Usuário')) App.logout();
       }
     }
 

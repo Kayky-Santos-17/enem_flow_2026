@@ -60,6 +60,10 @@
           <svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
           Anotações
         </a>
+        <a href="perfil.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          Meu Perfil
+        </a>
       </nav>
 
       <button onclick="App.logout()" class="btn btn-danger" style="margin-top: auto; justify-content: flex-start; padding-left: 16px;">
@@ -174,8 +178,8 @@
         `).join('');
 
       } catch (err) {
-        if(err.message.includes('Sessão')) App.logout();
-        else App.showToast('Erro ao carregar progresso', true);
+        if(err.message.includes('Sessão') || err.message.includes('Token') || err.message.includes('Usuário')) App.logout();
+        else App.showToast('Conectando ao servidor...', true);
       }
     }
 

@@ -18,7 +18,7 @@ const contentSchema = new mongoose.Schema(
   {
     titulo: {
       type: String,
-      required: [true, 'Título é obrigatório'],
+      default: 'Material de Estudo',
       trim: true,
     },
     descricao: {

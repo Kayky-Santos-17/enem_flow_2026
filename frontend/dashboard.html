@@ -141,7 +141,7 @@
         
 
       } catch (err) {
-        if (err.message.includes('Sessão') || err.message.includes('Token')) App.logout();
+        if (err.message.includes('Sessão') || err.message.includes('Token') || err.message.includes('Usuário')) App.logout();
       }
     }
 
@@ -190,14 +190,7 @@
                   <div class="card content-card" onclick="openStudy('${c._id}', '${c.titulo}', '${c.url || ''}')" style="background: var(--dashboard-bg3);">
                     <span class="tag" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc;">${c.tipo.toUpperCase()}</span>
                     <h3 style="margin-bottom: 8px; font-size: 1.2rem;">${c.titulo}</h3>
-                    <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                      ${c.descricao || 'Nenhuma descrição fornecida.'}
-                    </p>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; margin-top: auto;">
-                      <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 4px;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        ${c.tempoMedio} min
-                      </span>
+                    <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; margin-top: auto;">
                       <span style="color: var(--primary); font-size: 0.85rem; font-weight: 600;">Iniciar &rarr;</span>
                     </div>
                   </div>

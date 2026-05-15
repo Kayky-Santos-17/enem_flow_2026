@@ -96,12 +96,6 @@
           <div class="card" style="padding: 2rem;">
             <form id="add-content-form">
               <div class="input-group">
-                <input type="text" id="titulo" placeholder="Título da Aula" required>
-              </div>
-              <div class="input-group">
-                <input type="text" id="descricao" placeholder="Breve descrição">
-              </div>
-              <div class="input-group">
                 <select id="materia" required>
                   <option value="" disabled selected>Matéria</option>
                   <option value="Matemática">Matemática</option>
@@ -140,9 +134,6 @@
               <div class="input-group">
                 <p class="text-muted" style="text-align: center; margin: 5px 0;">OU</p>
                 <input type="text" id="url" placeholder="Link externo (ex: YouTube URL)">
-              </div>
-              <div class="input-group">
-                <input type="number" id="tempo" placeholder="Tempo de Estudo (minutos)" required>
               </div>
               <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Fazer Deploy</button>
             </form>
@@ -193,7 +184,9 @@
           setTimeout(() => window.location.href = 'dashboard.html', 2000);
         }
       } catch (err) {
-        window.location.href = 'login.html';
+        if(err.message.includes('Sessão') || err.message.includes('Token') || err.message.includes('Usuário')) {
+          window.location.href = 'login.html';
+        }
       }
     }
 
@@ -288,14 +281,12 @@
         }
 
         const payload = {
-          titulo: document.getElementById('titulo').value,
-          descricao: document.getElementById('descricao').value,
+          titulo: document.getElementById('subassunto').value || document.getElementById('assunto').value || document.getElementById('materia').value,
           materia: document.getElementById('materia').value,
           assunto: document.getElementById('assunto').value,
           subassunto: document.getElementById('subassunto').value,
           tipo: document.getElementById('tipo').value,
-          url: finalUrl,
-          tempoMedio: parseInt(document.getElementById('tempo').value)
+          url: finalUrl
         };
 
         await App.api('/contents', {
