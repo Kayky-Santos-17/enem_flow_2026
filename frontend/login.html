@@ -148,6 +148,14 @@
         const errorDiv = document.getElementById('login-error');
         errorDiv.innerText = err.message;
         errorDiv.style.display = 'block';
+        errorDiv.style.opacity = '1';
+
+        // Faz a mensagem sumir após 5 segundos
+        if (window.errorTimeout) clearTimeout(window.errorTimeout);
+        window.errorTimeout = setTimeout(() => {
+          errorDiv.style.opacity = '0';
+          setTimeout(() => { errorDiv.style.display = 'none'; }, 300);
+        }, 5000);
         
         document.getElementById('submitBtn').disabled = false;
         document.getElementById('submitBtn').innerHTML = isLogin 

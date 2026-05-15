@@ -481,6 +481,8 @@ input:focus, select:focus {
   background: rgba(239, 68, 68, 0.05);
   border-radius: 10px;
   display: none; /* Escondido por padrão */
+  opacity: 0;
+  transition: opacity 0.3s ease;
   animation: slideDown 0.3s ease;
 }
 
