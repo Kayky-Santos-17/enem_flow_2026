@@ -56,10 +56,10 @@
           Entrar na Plataforma
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
         </button>
-      </form>
 
-      <!-- Erro bonitinho embaixo -->
-      <div id="login-error" class="error-msg"></div>
+        <!-- Mensagem de Erro Integrada e Elegante -->
+        <div id="login-error" class="error-msg-integrated"></div>
+      </form>
 
       <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--border); padding-top: 1.5rem;">
         <span class="text-muted" id="toggleTextMsg">Ainda não iniciou sua jornada?</span><br>
@@ -126,7 +126,7 @@
       const body = isLogin ? { email, senha } : { nome, email, senha };
 
       try {
-        document.getElementById('login-error').style.opacity = '0';
+        document.getElementById('login-error').style.display = 'none'; // Esconde erro anterior
         document.getElementById('submitBtn').disabled = true;
         document.getElementById('submitBtn').innerText = 'Autenticando...';
 
@@ -144,8 +144,10 @@
         setTimeout(() => window.location.href = urlDestino, 1500);
 
       } catch (err) {
-        // Agora usamos o sistema de Toast incrível para todos os erros!
-        App.showToast(err.message, true);
+        // Agora usamos a mensagem integrada embaixo do botão!
+        const errorDiv = document.getElementById('login-error');
+        errorDiv.innerText = err.message;
+        errorDiv.style.display = 'block';
         
         document.getElementById('submitBtn').disabled = false;
         document.getElementById('submitBtn').innerHTML = isLogin 
