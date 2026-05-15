@@ -115,10 +115,14 @@
     }
 
     let timerInterval;
-    let secondsElapsed = 0;
+    let localStartTime = 0;
     let serverStartTime = null;
 
     function updateDisplay() {
+      const now = Date.now();
+      const diffMs = now - localStartTime;
+      const secondsElapsed = Math.floor(diffMs / 1000);
+
       const h = Math.floor(secondsElapsed / 3600).toString().padStart(2, '0');
       const m = Math.floor((secondsElapsed % 3600) / 60).toString().padStart(2, '0');
       const s = (secondsElapsed % 60).toString().padStart(2, '0');
@@ -130,14 +134,14 @@
         const data = await App.api('/study/start', { method: 'POST' });
         serverStartTime = data.startTime;
 
+        localStartTime = Date.now(); // Marca o tempo real de início localmente
+
         document.getElementById('startBtn').style.display = 'none';
         document.getElementById('stopBtn').style.display = 'flex';
         document.querySelector('.study-container').classList.add('timer-active');
 
-        timerInterval = setInterval(() => {
-          secondsElapsed++;
-          updateDisplay();
-        }, 1000);
+        // Usa o relógio do sistema para nunca dessincronizar
+        timerInterval = setInterval(updateDisplay, 1000);
 
         App.showToast('Sessão iniciada! Foco total na missão.');
       } catch (err) {

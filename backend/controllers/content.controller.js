@@ -40,12 +40,14 @@ exports.getById = async (req, res) => {
 // POST /contents — cria novo conteúdo (admin)
 exports.create = async (req, res) => {
   try {
-    const { titulo, descricao, materia, tipo, url, tempoMedio, ordem } = req.body;
+    const { titulo, descricao, materia, assunto, subassunto, tipo, url, tempoMedio, ordem } = req.body;
 
     const content = await Content.create({
       titulo,
       descricao,
       materia,
+      assunto,
+      subassunto,
       tipo,
       url,
       tempoMedio,

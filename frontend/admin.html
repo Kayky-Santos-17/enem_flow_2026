@@ -102,13 +102,28 @@
                 <input type="text" id="descricao" placeholder="Breve descrição">
               </div>
               <div class="input-group">
-                <input type="text" id="materia" placeholder="Matéria (ex: Biologia)" required>
+                <select id="materia" required>
+                  <option value="" disabled selected>Matéria</option>
+                  <option value="Matemática">Matemática</option>
+                  <option value="Física">Física</option>
+                  <option value="Química">Química</option>
+                  <option value="Biologia">Biologia</option>
+                  <option value="História">História</option>
+                  <option value="Geografia">Geografia</option>
+                  <option value="Filosofia">Filosofia</option>
+                  <option value="Sociologia">Sociologia</option>
+                  <option value="Literatura">Literatura</option>
+                  <option value="Português">Português</option>
+                  <option value="Artes">Artes</option>
+                  <option value="Inglês">Inglês</option>
+                  <option value="Espanhol">Espanhol</option>
+                </select>
               </div>
               <div class="input-group">
                 <input type="text" id="assunto" placeholder="Assunto (ex: Reino Animal)" required>
               </div>
               <div class="input-group">
-                <input type="text" id="subassunto" placeholder="Sub-assunto (ex: Artrópodes) - Opcional">
+                <input type="text" id="subassunto" placeholder="Tópico (ex: Artrópodes) - Opcional">
               </div>
               <div class="input-group">
                 <select id="tipo" required>
