@@ -1,0 +1,48 @@
+{
+  "version": 2,
+  "name": "enem-flow",
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/auth/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/contents/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/study/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/ai/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/upload/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/health",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/",
+      "dest": "frontend/login.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    }
+  ]
+}

@@ -234,7 +234,8 @@ exports.forgotPassword = async (req, res) => {
 
     // MOCK EMAIL: Em produção, envie via Nodemailer. 
     // Aqui imprimimos no console para você testar.
-    const resetUrl = `http://localhost:5500/reset-password.html?token=${token}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
+    const resetUrl = `${frontendUrl}/reset-password.html?token=${token}`;
     console.log(`\n[EMAIL MOCK] Assunto: Recuperação de Senha - EnemFlow`);
     console.log(`Para: ${user.email}`);
     console.log(`Link para resetar sua senha: ${resetUrl}\n`);

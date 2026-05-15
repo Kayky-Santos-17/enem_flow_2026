@@ -30,12 +30,9 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// ── Rotas ────────────────────────────────────────────────────────────────────
-app.use('/auth',     require('./routes/auth.routes'));
-app.use('/contents', require('./routes/content.routes'));
-app.use('/study',    require('./routes/study.routes'));
-app.use('/ai',       require('./routes/ai.routes'));
-app.use('/upload',   require('./routes/upload.routes'));
+// ── Servir Frontend Estático ────────────────────────────────────────────────
+// Isso permite que você hospede tudo em um único lugar (como o Render.com)
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Health check
 app.get('/health', (req, res) => {
@@ -44,6 +41,22 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
+});
+
+// Rotas da API
+app.use('/auth',     require('./routes/auth.routes'));
+app.use('/contents', require('./routes/content.routes'));
+app.use('/study',    require('./routes/study.routes'));
+app.use('/ai',       require('./routes/ai.routes'));
+app.use('/upload',   require('./routes/upload.routes'));
+
+// Fallback para o Frontend (Single Page Application ou multi-páginas)
+// Se não for uma rota de API ou arquivo estático, serve o login.html ou index.html
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/auth') || req.path.startsWith('/contents') || req.path.startsWith('/study') || req.path.startsWith('/ai') || req.path.startsWith('/upload')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
 
 // ── Handler de rotas não encontradas ─────────────────────────────────────────
@@ -59,8 +72,15 @@ app.use((err, req, res, next) => {
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 EnemFlow API rodando → http://localhost:${PORT}`);
-  console.log(`📋 Health check      → http://localhost:${PORT}/health`);
-  console.log(`🌍 Ambiente          → ${process.env.NODE_ENV}`);
-});
+
+// Exporta o app para a Vercel
+module.exports = app;
+
+// Só inicia o servidor se não estiver na Vercel (localmente)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 EnemFlow API rodando → http://localhost:${PORT}`);
+    console.log(`📋 Health check      → http://localhost:${PORT}/health`);
+    console.log(`🌍 Ambiente          → ${process.env.NODE_ENV}`);
+  });
+}
