@@ -108,13 +108,20 @@
                   <option value="Sociologia">Sociologia</option>
                   <option value="Literatura">Literatura</option>
                   <option value="Português">Português</option>
+                  <option value="Redação">Redação</option>
                   <option value="Artes">Artes</option>
                   <option value="Inglês">Inglês</option>
                   <option value="Espanhol">Espanhol</option>
                 </select>
               </div>
               <div class="input-group">
-                <input type="text" id="assunto" placeholder="Assunto (ex: Reino Animal)" required>
+                <input type="text" id="titulo" placeholder="Título da Aula (ex: Teorema de Pitágoras)" required>
+              </div>
+              <div class="input-group">
+                <input type="text" id="descricao" placeholder="Pequena descrição ou resumo" required>
+              </div>
+              <div class="input-group">
+                <input type="text" id="assunto" placeholder="Assunto (ex: Geometria Plana)" required>
               </div>
               <div class="input-group">
                 <input type="text" id="subassunto" placeholder="Tópico (ex: Artrópodes) - Opcional">
@@ -125,6 +132,7 @@
                   <option value="video">Vídeo Aula (Upload ou URL)</option>
                   <option value="pdf">Material em PDF (Upload)</option>
                   <option value="artigo">Artigo Texto</option>
+                  <option value="exercicio">Exercício / Simulado</option>
                 </select>
               </div>
               <div class="input-group">
@@ -297,7 +305,7 @@
           const formData = new FormData();
           formData.append('file', fileInput.files[0]);
 
-          const uploadRes = await fetch(`${API_URL}/upload`, {
+          const uploadRes = await fetch(`${App.apiUrl}/upload`, {
             method: 'POST',
             headers: { 'Authorization': 'Bearer ' + App.getToken() },
             body: formData
@@ -308,7 +316,8 @@
         }
 
         const payload = {
-          titulo: document.getElementById('subassunto').value || document.getElementById('assunto').value || document.getElementById('materia').value,
+          titulo: document.getElementById('titulo').value,
+          descricao: document.getElementById('descricao').value,
           materia: document.getElementById('materia').value,
           assunto: document.getElementById('assunto').value,
           subassunto: document.getElementById('subassunto').value,

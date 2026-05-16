@@ -52,6 +52,7 @@ exports.create = async (req, res) => {
       url,
       tempoMedio,
       ordem,
+      criadoPor: req.userId,
     });
 
     res.status(201).json(content);

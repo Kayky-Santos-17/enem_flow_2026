@@ -200,7 +200,7 @@
         const formData = new FormData();
         formData.append('file', fileInput.files[0]);
 
-        const uploadRes = await fetch(`${API_URL}/upload`, {
+        const uploadRes = await fetch(`${App.apiUrl}/upload`, {
           method: 'POST',
           headers: { 'Authorization': 'Bearer ' + App.getToken() },
           body: formData

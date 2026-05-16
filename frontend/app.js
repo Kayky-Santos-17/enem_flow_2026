@@ -1,8 +1,10 @@
 const protocol = window.location.protocol;
 const host = window.location.hostname;
-const isLocal = protocol === 'file:' || window.location.port === '5500' || host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.');
-const API_URL = isLocal ? `http://${host || 'localhost'}:3000` : '';
+const port = window.location.port;
+const isLocal = protocol === 'file:' || host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.');
+
 const App = {
+  apiUrl: isLocal ? `http://${host || 'localhost'}:3000` : '',
   getToken: () => localStorage.getItem('token'),
   setToken: (token) => localStorage.setItem('token', token),
   logout: () => {
@@ -30,7 +32,7 @@ const App = {
     }
 
     try {
-      const response = await fetch(`${API_URL}${endpoint}`, {
+      const response = await fetch(`${App.apiUrl}${endpoint}`, {
         ...options,
         headers,
       });
