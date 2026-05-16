@@ -9,6 +9,7 @@ const App = {
   setToken: (token) => localStorage.setItem('token', token),
   logout: () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('enemflow_last_access');
     window.location.href = 'login.html';
   },
   
@@ -109,7 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (lastAccess && (now - parseInt(lastAccess)) > TWELVE_HOURS) {
     console.log('Sessão expirada por inatividade (12h).');
-    App.logout();
+    if (!window.location.href.includes('login.html')) {
+      App.logout();
+    }
     return;
   }
   // Atualiza o timestamp de acesso
