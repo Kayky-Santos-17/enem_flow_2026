@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const dns = require('dns');
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+} catch (e) {}
 require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 
 mongoose.connect(process.env.MONGO_URI).then(async () => {

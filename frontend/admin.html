@@ -220,10 +220,10 @@
         listContainer.innerHTML = contents.map(c => `
           <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem;">
             <div>
-              <span class="tag" style="margin-bottom: 6px;">${c.tipo.toUpperCase()}</span>
+              <span class="tag" style="margin-bottom: 6px;">${(c.tipo || 'artigo').toUpperCase()}</span>
               <strong style="display: block; font-size: 1.1rem; margin-bottom: 2px;">${c.titulo}</strong>
               <span class="text-muted" style="font-size: 0.85rem;">
-                ${c.materia} > ${c.assunto || 'Geral'} ${c.subassunto ? '> ' + c.subassunto : ''}
+                ${c.materia} &gt; ${c.assunto || 'Geral'} ${c.subassunto ? '&gt; ' + c.subassunto : ''}
               </span>
             </div>
             <button onclick="deleteContent('${c._id}')" class="btn btn-danger" style="padding: 8px 16px; font-size: 0.85rem;">
