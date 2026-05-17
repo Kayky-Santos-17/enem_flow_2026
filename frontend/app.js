@@ -59,11 +59,11 @@ const App = {
       
       let msg = error.message;
       
-      // Tradução de erros técnicos para mensagens amigáveis
-      if (msg.includes('Unexpected token') || msg.includes('is not valid JSON')) {
-        msg = 'O sistema está temporariamente instável. Verifique sua conexão ou tente mais tarde.';
-      } else if (msg === 'Failed to fetch' || msg.includes('NetworkError')) {
-        msg = 'Não foi possível conectar ao servidor. Verifique se você está online.';
+      // Tradução amigável e acessível para o usuário final
+      if (msg === 'Failed to fetch' || msg.includes('NetworkError') || msg.includes('connection refused') || msg.includes('ECONNREFUSED')) {
+        msg = `Conexão falhou: Verifique se você está online ou se o servidor está ativo. (${error.message || 'Sem resposta'})`;
+      } else if (msg.includes('Unexpected token') || msg.includes('is not valid JSON')) {
+        msg = 'Resposta instável do servidor. Aguarde alguns instantes e tente novamente.';
       }
       
       throw new Error(msg);

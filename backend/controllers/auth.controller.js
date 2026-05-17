@@ -96,14 +96,13 @@ exports.login = async (req, res) => {
     // Busca incluindo a senha (campo com select:false no model)
     const user = await User.findOne({ email: email.toLowerCase() }).select('+senha');
     if (!user) {
-      // Mensagem genérica para não revelar se o e-mail existe
-      return res.status(401).json({ error: 'Credenciais inválidas.' });
+      return res.status(401).json({ error: 'E-mail não cadastrado. Que tal criar uma conta gratuita no botão abaixo?' });
     }
 
     // Compara senha com o hash
     const senhaCorreta = await bcrypt.compare(senha, user.senha);
     if (!senhaCorreta) {
-      return res.status(401).json({ error: 'Credenciais inválidas.' });
+      return res.status(401).json({ error: 'Senha incorreta. Verifique suas credenciais ou clique em "Esqueci minha senha".' });
     }
 
     // Controle de Sessão: Alunos geram novo token a cada login (deslogando outros aparelhos)
