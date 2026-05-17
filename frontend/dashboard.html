@@ -6,6 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EnemFlow - Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .subject-card {
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .subject-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(99, 102, 241, 0.25) !important;
+      border-color: rgba(255, 255, 255, 0.25) !important;
+    }
+    .subject-card:hover svg {
+      transform: translateX(4px);
+    }
+  </style>
 </head>
 
 <body>
@@ -145,6 +158,16 @@
       }
     }
 
+    function getSubjectColors(subjectName) {
+      const s = subjectName.toLowerCase();
+      if (s.includes('mat')) return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', badge: 'rgba(99, 102, 241, 0.2)', text: '#a5b4fc', border: '#4338ca' };
+      if (s.includes('port') || s.includes('red') || s.includes('lin')) return { grad: 'linear-gradient(135deg, #4c0519 0%, #881337 100%)', badge: 'rgba(244, 63, 94, 0.2)', text: '#fda4af', border: '#be123c' };
+      if (s.includes('fis') || s.includes('quim') || s.includes('cie') || s.includes('bio') || s.includes('natureza')) return { grad: 'linear-gradient(135deg, #022c22 0%, #064e3b 100%)', badge: 'rgba(16, 185, 129, 0.2)', text: '#a7f3d0', border: '#047857' };
+      if (s.includes('hist') || s.includes('geog') || s.includes('hum') || s.includes('filo') || s.includes('socio')) return { grad: 'linear-gradient(135deg, #451a03 0%, #78350f 100%)', badge: 'rgba(245, 158, 11, 0.2)', text: '#fde68a', border: '#b45309' };
+      // Default
+      return { grad: 'linear-gradient(135deg, #09090b 0%, #18181b 100%)', badge: 'rgba(255,255,255,0.06)', text: '#e4e4e7', border: '#27272a' };
+    }
+
     async function loadContents() {
       try {
         const listContainer = document.getElementById('content-list');
@@ -157,86 +180,48 @@
           return;
         }
 
-        const grouped = {};
+        const subjects = {};
         contents.forEach(c => {
-          const m = c.materia || 'Outros';
-          const a = c.assunto || 'Geral';
-          const s = c.subassunto || '';
-
-          if (!grouped[m]) grouped[m] = {};
-          if (!grouped[m][a]) grouped[m][a] = {};
-          if (!grouped[m][a][s]) grouped[m][a][s] = [];
-
-          grouped[m][a][s].push(c);
+          const m = c.materia || 'Geral';
+          if (!subjects[m]) subjects[m] = 0;
+          subjects[m]++;
         });
 
         let html = '';
-        for (const m in grouped) {
-          const mId = m.replace(/[^a-zA-Z0-9]/g, '_');
+        for (const m in subjects) {
+          const count = subjects[m];
+          const colors = getSubjectColors(m);
           
           html += `
-            <div class="materia-accordion" style="margin-bottom: 1.5rem; background: var(--dashboard-bg1); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.3s ease;">
-              <!-- Cabeçalho Acordeão -->
-              <div class="materia-header-toggle" onclick="toggleMateria('${mId}')" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'" style="padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s; user-select: none;">
-                <h2 class="text-gradient" style="font-size: 1.6rem; font-weight: 800; margin: 0; pointer-events: none;">${m}</h2>
-                <div class="accordion-icon" id="icon-${mId}" style="transition: transform 0.3s ease; display: flex; align-items: center; color: var(--primary); pointer-events: none;">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </div>
+            <div class="card subject-card" onclick="window.location.href='materia.html?subject=${encodeURIComponent(m)}'" style="background: ${colors.grad}; border: 1px solid ${colors.border}; padding: 2.25rem 2rem; border-radius: 20px; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+              
+              <!-- Glow Effect -->
+              <div style="position: absolute; top: -50%; right: -50%; width: 180px; height: 180px; background: rgba(255,255,255,0.04); filter: blur(30px); border-radius: 50%; pointer-events: none;"></div>
+              
+              <div>
+                <span class="tag" style="background: ${colors.badge}; color: ${colors.text}; font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.05);">
+                  ${count} ${count === 1 ? 'Aula Disponível' : 'Aulas Disponíveis'}
+                </span>
+                <h2 style="font-size: 1.85rem; font-weight: 800; color: #ffffff; margin-top: 1.25rem; margin-bottom: 0.5rem; letter-spacing: -0.5px;">${m}</h2>
+                <p style="color: rgba(255,255,255,0.65); font-size: 0.85rem; line-height: 1.45; max-width: 280px; margin: 0;">Explore o cronograma de tópicos, assista a vídeos e exercite seu foco.</p>
               </div>
               
-              <!-- Conteúdo Colapsável -->
-              <div class="materia-content-wrapper" id="content-${mId}" style="display: none; padding: 0 2rem 2rem 2rem; border-top: 1px solid rgba(255,255,255,0.03); animation: fadeIn 0.3s ease;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 1.5rem; color: #ffffff; font-size: 0.9rem; font-weight: 700;">
+                <span>Acessar Disciplina</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" style="transition: transform 0.3s ease;">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
           `;
-          
-          for (const a in grouped[m]) {
-            html += `<div class="assunto-block" style="margin-left: 0.5rem; margin-top: 1.5rem; border-left: 2px solid var(--dashboard-bg2); padding-left: 1.5rem;">
-                       <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 1rem; font-weight: 600;">${a}</h3>`;
-                       
-            for (const s in grouped[m][a]) {
-              if (s !== 'Geral' && s !== '') {
-                html += `<h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 0.8rem; margin-left: 0.5rem; font-weight: 500;">➤ ${s}</h4>`;
-              }
-              
-              html += `<div class="grid" style="margin-left: 0.5rem; margin-bottom: 1.2rem;">`;
-              grouped[m][a][s].forEach(c => {
-                html += `
-                  <div class="card content-card" onclick="openStudy('${c._id}', '${c.titulo}', '${c.url || ''}')" style="background: var(--dashboard-bg3); margin-bottom: 0px; cursor: pointer;">
-                    <span class="tag" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc;">${c.tipo.toUpperCase()}</span>
-                    <h3 style="margin-bottom: 8px; font-size: 1.15rem;">${c.titulo}</h3>
-                    <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid var(--border); padding-top: 0.8rem; margin-top: auto;">
-                      <span style="color: var(--primary); font-size: 0.8rem; font-weight: 600;">Iniciar &rarr;</span>
-                    </div>
-                  </div>
-                `;
-              });
-              html += `</div>`;
-            }
-            html += `</div>`;
-          }
-          html += `</div></div>`;
         }
-        
+
         listContainer.innerHTML = html;
-        listContainer.classList.remove('grid');
+        listContainer.classList.add('grid');
 
       } catch (err) {
         App.showToast('Falha ao sincronizar conteúdos.', true);
-      }
-    }
-
-    function toggleMateria(id) {
-      const content = document.getElementById(`content-${id}`);
-      const icon = document.getElementById(`icon-${id}`);
-      const isOpen = content.style.display === 'block';
-      
-      if (isOpen) {
-        content.style.display = 'none';
-        icon.style.transform = 'rotate(0deg)';
-      } else {
-        content.style.display = 'block';
-        icon.style.transform = 'rotate(180deg)';
       }
     }
 
