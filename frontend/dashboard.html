@@ -188,11 +188,11 @@
     function getSubjectColors(subjectName) {
       const s = subjectName.toLowerCase();
       if (s.includes('mat')) return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', badge: 'rgba(99, 102, 241, 0.2)', text: '#a5b4fc', border: '#4338ca' };
-      if (s.includes('port') || s.includes('red') || s.includes('lin')) return { grad: 'linear-gradient(135deg, #4c0519 0%, #881337 100%)', badge: 'rgba(244, 63, 94, 0.2)', text: '#fda4af', border: '#be123c' };
+      if (s.includes('port') || s.includes('red') || s.includes('lin') || s.includes('art')) return { grad: 'linear-gradient(135deg, #4c0519 0%, #881337 100%)', badge: 'rgba(244, 63, 94, 0.2)', text: '#fda4af', border: '#be123c' };
       if (s.includes('fis') || s.includes('quim') || s.includes('cie') || s.includes('bio') || s.includes('natureza')) return { grad: 'linear-gradient(135deg, #022c22 0%, #064e3b 100%)', badge: 'rgba(16, 185, 129, 0.2)', text: '#a7f3d0', border: '#047857' };
       if (s.includes('hist') || s.includes('geog') || s.includes('hum') || s.includes('filo') || s.includes('socio')) return { grad: 'linear-gradient(135deg, #451a03 0%, #78350f 100%)', badge: 'rgba(245, 158, 11, 0.2)', text: '#fde68a', border: '#b45309' };
-      // Default
-      return { grad: 'linear-gradient(135deg, #09090b 0%, #18181b 100%)', badge: 'rgba(255,255,255,0.06)', text: '#e4e4e7', border: '#27272a' };
+      // Default: premium brand gradient (indigo to rose)
+      return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #4c0519 100%)', badge: 'rgba(99, 102, 241, 0.2)', text: '#fda4af', border: '#ec4899' };
     }
 
     async function loadContents() {
