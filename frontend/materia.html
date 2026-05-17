@@ -58,17 +58,17 @@
     }
     
     .topic-section {
-      background: var(--dashboard-bg1);
+      background: var(--bg-panel);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 2.5rem;
+      padding: 2rem 2.25rem;
       margin-bottom: 2.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
     
     .subtopic-title {
       font-size: 1.05rem;
-      color: var(--primary);
+      color: var(--secondary);
       margin-top: 1.5rem;
       margin-bottom: 1rem;
       font-weight: 600;
@@ -79,32 +79,74 @@
     
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.5rem;
       margin-bottom: 1.5rem;
     }
     
     .lesson-card {
-      background: var(--dashboard-bg3);
+      background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 1.5rem;
-      cursor: pointer;
+      padding: 1.75rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 160px;
+      min-height: 200px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .lesson-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(99, 102, 241, 0.3);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 15px rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.25);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
     
-    .lesson-card:hover .lesson-arrow {
-      transform: translateX(4px);
+    .resource-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      width: 100%;
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .pdf-btn {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #818cf8;
+    }
+    .pdf-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+    
+    .video-btn {
+      background: rgba(236, 72, 153, 0.08);
+      border: 1px solid rgba(236, 72, 153, 0.25);
+      color: #f472b6;
+    }
+    .video-btn:hover:not(:disabled) {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+    }
+    
+    .video-btn.placeholder-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.25);
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -204,9 +246,9 @@
       </header>
 
       <!-- Subject Hero Header -->
-      <div style="margin-top: 2rem; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 8px;">
-        <span class="tag" id="lessonCountBadge" style="background: rgba(99, 102, 241, 0.15); color: #818cf8; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 8px; text-transform: uppercase; width: fit-content; border: 1px solid rgba(255,255,255,0.03);">Carregando...</span>
-        <h1 id="subjectTitle" style="font-size: 3.85rem; font-weight: 900; margin: 0.25rem 0 0 0; letter-spacing: -1.5px; font-family: 'Outfit'; line-height: 1.1; display: inline-block;">Disciplina</h1>
+      <div style="margin-top: 2.5rem; margin-bottom: 3rem; display: flex; flex-direction: column; gap: 10px;">
+        <span class="tag" id="lessonCountBadge" style="background: rgba(99, 102, 241, 0.1); color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; width: fit-content; border: 1px solid rgba(99, 102, 241, 0.2);">Carregando...</span>
+        <h1 id="subjectTitle" class="text-gradient" style="font-size: 3.5rem; font-weight: 800; margin: 0; letter-spacing: -0.03em; line-height: 1.1; font-family: 'Outfit';">Disciplina</h1>
       </div>
 
       <!-- Topics list container -->
@@ -251,15 +293,6 @@
         const colors = getSubjectColors(subjectName);
         const title = document.getElementById('subjectTitle');
         title.innerText = subjectName;
-        title.style.color = colors.text;
-        title.style.textShadow = `0 4px 20px ${colors.border}55`;
-        title.style.background = 'none';
-        title.style.webkitTextFillColor = 'initial';
-        
-        const badge = document.getElementById('lessonCountBadge');
-        badge.style.background = colors.badge;
-        badge.style.color = colors.text;
-        badge.style.borderColor = colors.border;
 
         const contents = await App.api('/contents');
         
@@ -306,21 +339,51 @@
 
             html += `<div class="cards-grid">`;
             grouped[a][s].forEach(c => {
+              const hasVideo = !!(c.videoUrl || c.video);
+              const videoUrl = c.videoUrl || c.video || '#';
+              
               html += `
-                <div class="lesson-card" onclick="openStudy('${c._id}')">
+                <div class="lesson-card">
                   <div>
-                    <span class="tag" style="background: rgba(255,255,255,0.04); color: #a1a1aa; border: 1px solid rgba(255,255,255,0.06); font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">
+                    <span class="tag" style="background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid var(--border); font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
                       ${c.tipo.toUpperCase()}
                     </span>
-                    <h3 style="font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-top: 10px; margin-bottom: 0;">${c.titulo}</h3>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin-top: 10px; margin-bottom: 1.5rem; line-height: 1.35;">${c.titulo}</h3>
                   </div>
                   
-                  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1.5rem;">
-                    <span style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">Iniciar Aula</span>
-                    <svg class="lesson-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary)" stroke-width="3" style="transition: transform 0.3s ease;">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button class="resource-btn pdf-btn" onclick="openStudy('${c._id}')">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                      </svg>
+                      Ler Apostila (PDF)
+                    </button>
+                    
+                    ${hasVideo ? `
+                      <button class="resource-btn video-btn" onclick="window.open('${videoUrl}', '_blank')">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none">
+                          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Assistir Vídeo Aula
+                      </button>
+                    ` : `
+                      <button class="resource-btn video-btn placeholder-btn" disabled title="Vídeo aula em fase de produção">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                          <line x1="7" y1="2" x2="7" y2="22"></line>
+                          <line x1="17" y1="2" x2="17" y2="22"></line>
+                          <line x1="2" y1="12" x2="22" y2="12"></line>
+                          <line x1="2" y1="7" x2="7" y2="7"></line>
+                          <line x1="2" y1="17" x2="7" y2="17"></line>
+                          <line x1="17" y1="17" x2="22" y2="17"></line>
+                          <line x1="17" y1="7" x2="22" y2="7"></line>
+                        </svg>
+                        Vídeo Aula (Em breve)
+                      </button>
+                    `}
                   </div>
                 </div>
               `;
