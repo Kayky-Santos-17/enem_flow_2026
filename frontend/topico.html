@@ -32,7 +32,7 @@
     }
     
     .lesson-card {
-      background: rgba(255, 255, 255, 0.02);
+      background: var(--bg-panel);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.75rem;
@@ -40,13 +40,28 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 200px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .lesson-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      opacity: 0;
+      transition: opacity 0.35s ease;
     }
     
     .lesson-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(99, 102, 241, 0.25);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--primary) !important;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+    
+    .lesson-card:hover::before {
+      opacity: 1;
     }
     
     .resource-btn {
@@ -281,7 +296,7 @@
                 <span class="tag" style="background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid var(--border); font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">
                   ${sub}
                 </span>
-                <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin-top: 10px; margin-bottom: 1.5rem; line-height: 1.35;">${c.titulo}</h3>
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text); margin-top: 10px; margin-bottom: 1.5rem; line-height: 1.35; font-family: 'Plus Jakarta Sans', 'Outfit', 'Sora', sans-serif; text-transform: capitalize; letter-spacing: -0.02em;">${c.titulo}</h3>
               </div>
               
               <div style="display: flex; gap: 10px; margin-top: 1rem; width: 100%;">

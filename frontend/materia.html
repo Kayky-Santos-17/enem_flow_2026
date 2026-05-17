@@ -76,22 +76,22 @@
       min-height: 160px;
       position: relative;
       overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
     .topic-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; height: 4px;
+      top: 0; left: 0; right: 0; height: 3px;
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.35s ease;
     }
     
     .topic-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--primary);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(99, 102, 241, 0.15);
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--primary) !important;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.25);
     }
     
     .topic-card:hover::before {
@@ -349,7 +349,7 @@
                 <span class="tag" style="background: rgba(99, 102, 241, 0.08); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.2); font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase;">
                   ${count} ${count === 1 ? 'Aula' : 'Aulas'}
                 </span>
-                <h3 style="font-size: 1.35rem; font-weight: 700; color: var(--text); margin-top: 12px; margin-bottom: 0; line-height: 1.3;">
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text); margin-top: 12px; margin-bottom: 0; line-height: 1.3; font-family: 'Plus Jakarta Sans', 'Outfit', 'Sora', sans-serif; text-transform: capitalize; letter-spacing: -0.02em;">
                   ${topicName}
                 </h3>
               </div>
