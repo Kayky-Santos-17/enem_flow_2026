@@ -5,11 +5,11 @@ const isLocal = protocol === 'file:' || host === 'localhost' || host === '127.0.
 
 const App = {
   apiUrl: isLocal ? `http://${host || 'localhost'}:3000` : '',
-  getToken: () => localStorage.getItem('token'),
-  setToken: (token) => localStorage.setItem('token', token),
+  getToken: () => sessionStorage.getItem('token'),
+  setToken: (token) => sessionStorage.setItem('token', token),
   logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('enemflow_last_access');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('enemflow_last_access');
     window.location.href = 'login.html';
   },
   
@@ -104,7 +104,7 @@ const App = {
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- SEGURANÇA: Trava de Sessão de 12 Horas ---
-  const lastAccess = localStorage.getItem('enemflow_last_access');
+  const lastAccess = sessionStorage.getItem('enemflow_last_access');
   const now = Date.now();
   const TWELVE_HOURS = 12 * 60 * 60 * 1000; // 12h em milissegundos
 
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   // Atualiza o timestamp de acesso
-  localStorage.setItem('enemflow_last_access', now.toString());
+  sessionStorage.setItem('enemflow_last_access', now.toString());
 
   // Inicializar Tema
   const savedTheme = localStorage.getItem('enemflow_theme');
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const payload = JSON.parse(atob(token.split('.')[1]));
       
       // Atualiza o tempo de acesso no login
-      localStorage.setItem('enemflow_last_access', Date.now().toString());
+      sessionStorage.setItem('enemflow_last_access', Date.now().toString());
 
       if (payload.role === 'admin' && !window.location.href.includes('admin.html')) {
         const nav = document.querySelector('nav');
