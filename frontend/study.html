@@ -87,32 +87,40 @@
     if(!App.getToken()) window.location.href = 'login.html';
 
     const contentId = localStorage.getItem('currentContentId');
-    const contentTitle = localStorage.getItem('currentContentTitle');
-    const contentUrl = localStorage.getItem('currentContentUrl');
 
     if(!contentId) {
       window.location.href = 'dashboard.html';
     }
 
-    document.getElementById('contentTitle').innerText = contentTitle || 'Matéria Desconhecida';
+    async function loadContentDetails() {
+      try {
+        const content = await App.api(`/contents/${contentId}`);
+        
+        document.getElementById('contentTitle').innerText = content.titulo || 'Matéria Desconhecida';
 
-    // Injeta o iframe se a URL existir
-    if (contentUrl && contentUrl.trim() !== '') {
-      document.getElementById('no-media-text').style.display = 'none';
-      const iframe = document.createElement('iframe');
-      
-      // Se for YouTube, converte para versão embed
-      let finalUrl = contentUrl;
-      if (contentUrl.includes('youtube.com/watch?v=')) {
-        finalUrl = contentUrl.replace('watch?v=', 'embed/');
+        // Injeta o iframe se a URL existir
+        if (content.url && content.url.trim() !== '') {
+          document.getElementById('no-media-text').style.display = 'none';
+          const iframe = document.createElement('iframe');
+          
+          // Se for YouTube, converte para versão embed
+          let finalUrl = content.url;
+          if (content.url.includes('youtube.com/watch?v=')) {
+            finalUrl = content.url.replace('watch?v=', 'embed/');
+          }
+          
+          iframe.src = finalUrl;
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.border = 'none';
+          document.getElementById('media-container').appendChild(iframe);
+        }
+      } catch (err) {
+        App.showToast('Erro ao carregar os detalhes do conteúdo: ' + err.message, true);
       }
-      
-      iframe.src = finalUrl;
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      document.getElementById('media-container').appendChild(iframe);
     }
+
+    loadContentDetails();
 
     let timerInterval;
     let localStartTime = 0;
