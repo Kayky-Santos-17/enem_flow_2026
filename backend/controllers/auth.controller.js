@@ -9,8 +9,8 @@ const crypto = require('crypto');
  * Gera um JWT assinado com o id do usuário e o token de sessão atual.
  * Expira conforme JWT_EXPIRES_IN definido no .env (padrão: 7d).
  */
-const gerarToken = (userId, sessionToken = '') =>
-  jwt.sign({ id: userId, sessionToken }, process.env.JWT_SECRET, {
+const gerarToken = (userId, role = 'user', sessionToken = '') =>
+  jwt.sign({ id: userId, role, sessionToken }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 
@@ -60,7 +60,7 @@ exports.register = async (req, res) => {
       sessionToken
     });
 
-    const token = gerarToken(user._id, sessionToken);
+    const token = gerarToken(user._id, user.role, sessionToken);
 
     res.status(201).json({
       message: 'Usuário criado com sucesso.',
@@ -113,7 +113,7 @@ exports.login = async (req, res) => {
       await user.save();
     }
 
-    const token = gerarToken(user._id, sessionToken);
+    const token = gerarToken(user._id, user.role, sessionToken);
 
     res.json({
       token,
