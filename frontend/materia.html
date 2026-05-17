@@ -204,11 +204,9 @@
       </header>
 
       <!-- Subject Hero Header -->
-      <div class="subject-hero" id="subjectHero">
-        <div class="subject-hero-glow"></div>
-        <span class="tag" style="background: rgba(255,255,255,0.08); color: #ffffff;" id="lessonCountBadge">Carregando...</span>
-        <h1 style="font-size: 2.75rem; font-weight: 800; color: #ffffff; margin-top: 1rem; margin-bottom: 0.5rem; letter-spacing: -1px;" id="subjectTitle">Disciplina</h1>
-        <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.5; margin: 0; max-width: 480px;">Bons estudos! Esta trilha de aprendizado foi estruturada para maximizar sua absorção e foco.</p>
+      <div style="margin-top: 2rem; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 8px;">
+        <span class="tag" id="lessonCountBadge" style="background: rgba(99, 102, 241, 0.15); color: #818cf8; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 8px; text-transform: uppercase; width: fit-content; border: 1px solid rgba(255,255,255,0.03);">Carregando...</span>
+        <h1 id="subjectTitle" style="font-size: 3.85rem; font-weight: 900; margin: 0.25rem 0 0 0; letter-spacing: -1.5px; font-family: 'Outfit'; line-height: 1.1; display: inline-block;">Disciplina</h1>
       </div>
 
       <!-- Topics list container -->
@@ -251,10 +249,16 @@
 
         // Aplica cores do Hero dinamicamente
         const colors = getSubjectColors(subjectName);
-        const hero = document.getElementById('subjectHero');
-        hero.style.background = colors.grad;
-        hero.style.borderColor = colors.border;
-        document.getElementById('subjectTitle').innerText = subjectName;
+        const title = document.getElementById('subjectTitle');
+        title.innerText = subjectName;
+        title.style.background = colors.grad;
+        title.style.webkitBackgroundClip = 'text';
+        title.style.webkitTextFillColor = 'transparent';
+        
+        const badge = document.getElementById('lessonCountBadge');
+        badge.style.background = colors.badge;
+        badge.style.color = colors.text;
+        badge.style.borderColor = colors.border;
 
         const contents = await App.api('/contents');
         

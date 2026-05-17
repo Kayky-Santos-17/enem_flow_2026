@@ -193,22 +193,26 @@
           const colors = getSubjectColors(m);
           
           html += `
-            <div class="card subject-card" onclick="window.location.href='materia.html?subject=${encodeURIComponent(m)}'" style="background: ${colors.grad}; border: 1px solid ${colors.border}; padding: 2.25rem 2rem; border-radius: 20px; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div class="card subject-card" onclick="window.location.href='materia.html?subject=${encodeURIComponent(m)}'" style="background: rgba(18, 18, 22, 0.6); backdrop-filter: blur(12px); border: 1px solid ${colors.border}; padding: 2.25rem 2rem; border-radius: 24px; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);">
               
-              <!-- Glow Effect -->
-              <div style="position: absolute; top: -50%; right: -50%; width: 180px; height: 180px; background: rgba(255,255,255,0.04); filter: blur(30px); border-radius: 50%; pointer-events: none;"></div>
+              <!-- Background dynamic ambient glow of the subject's colors -->
+              <div style="position: absolute; top: -40%; right: -20%; width: 140px; height: 140px; background: ${colors.text}; filter: blur(40px); opacity: 0.15; border-radius: 50%; pointer-events: none;"></div>
               
               <div>
-                <span class="tag" style="background: ${colors.badge}; color: ${colors.text}; font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.05);">
-                  ${count} ${count === 1 ? 'Aula Disponível' : 'Aulas Disponíveis'}
+                <span class="tag" style="background: ${colors.badge}; color: ${colors.text}; font-size: 0.72rem; font-weight: 800; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.03); display: inline-block;">
+                  ${count} ${count === 1 ? 'Aula' : 'Aulas'}
                 </span>
-                <h2 style="font-size: 1.85rem; font-weight: 800; color: #ffffff; margin-top: 1.25rem; margin-bottom: 0.5rem; letter-spacing: -0.5px;">${m}</h2>
-                <p style="color: rgba(255,255,255,0.65); font-size: 0.85rem; line-height: 1.45; max-width: 280px; margin: 0;">Explore o cronograma de tópicos, assista a vídeos e exercite seu foco.</p>
+                <h2 style="font-size: 2.15rem; font-weight: 900; background: ${colors.grad}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 1rem; margin-bottom: 0.5rem; font-family: 'Outfit'; letter-spacing: -1px; display: inline-block;">
+                  ${m}
+                </h2>
+                <p style="color: rgba(255,255,255,0.55); font-size: 0.85rem; line-height: 1.45; max-width: 280px; margin: 0; font-family: 'Plus Jakarta Sans';">
+                  Explore o cronograma de tópicos, assista a vídeos e exercite seu foco.
+                </p>
               </div>
               
-              <div style="display: flex; align-items: center; gap: 8px; margin-top: 1.5rem; color: #ffffff; font-size: 0.9rem; font-weight: 700;">
+              <div class="subject-action-btn" style="display: flex; align-items: center; gap: 8px; margin-top: 1.5rem; color: ${colors.text}; font-size: 0.88rem; font-weight: 700; transition: all 0.3s ease;">
                 <span>Acessar Disciplina</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" style="transition: transform 0.3s ease;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" style="transition: transform 0.3s ease;">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
