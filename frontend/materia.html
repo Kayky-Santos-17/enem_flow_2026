@@ -251,9 +251,10 @@
         const colors = getSubjectColors(subjectName);
         const title = document.getElementById('subjectTitle');
         title.innerText = subjectName;
-        title.style.background = colors.grad;
-        title.style.webkitBackgroundClip = 'text';
-        title.style.webkitTextFillColor = 'transparent';
+        title.style.color = colors.text;
+        title.style.textShadow = `0 4px 20px ${colors.border}55`;
+        title.style.background = 'none';
+        title.style.webkitTextFillColor = 'initial';
         
         const badge = document.getElementById('lessonCountBadge');
         badge.style.background = colors.badge;
