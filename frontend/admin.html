@@ -303,9 +303,9 @@
             finalUrl = await new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.onload = () => {
-                // Limite para tamanho razoável em MongoDB (10MB)
-                if (reader.result.length > 14 * 1024 * 1024) {
-                  reject(new Error('Este arquivo PDF é muito grande. O limite máximo é de 10 MB para garantir o salvamento no banco de dados.'));
+                // Limite máximo para se manter seguro dentro do BSON de 16MB do MongoDB
+                if (reader.result.length > 15.5 * 1024 * 1024) {
+                  reject(new Error('Este arquivo PDF é muito grande. O limite máximo para upload direto no banco online é de 11.5 MB devido a restrições técnicas. Para arquivos maiores, hospede no Google Drive e adicione o link no campo "Link externo".'));
                 } else {
                   resolve(reader.result);
                 }
