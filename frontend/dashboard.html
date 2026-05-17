@@ -172,26 +172,41 @@
 
         let html = '';
         for (const m in grouped) {
-          html += `<div class="materia-block" style="margin-bottom: 3rem; background: var(--dashboard-bg1); padding: 2rem; border-radius: 16px; border: 1px solid var(--border);">
-                     <h2 class="text-gradient" style="font-size: 2rem; margin-bottom: 1.5rem; display: inline-block;">${m}</h2>`;
+          const mId = m.replace(/[^a-zA-Z0-9]/g, '_');
+          
+          html += `
+            <div class="materia-accordion" style="margin-bottom: 1.5rem; background: var(--dashboard-bg1); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.3s ease;">
+              <!-- Cabeçalho Acordeão -->
+              <div class="materia-header-toggle" onclick="toggleMateria('${mId}')" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'" style="padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.3s; user-select: none;">
+                <h2 class="text-gradient" style="font-size: 1.6rem; font-weight: 800; margin: 0; pointer-events: none;">${m}</h2>
+                <div class="accordion-icon" id="icon-${mId}" style="transition: transform 0.3s ease; display: flex; align-items: center; color: var(--primary); pointer-events: none;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Conteúdo Colapsável -->
+              <div class="materia-content-wrapper" id="content-${mId}" style="display: none; padding: 0 2rem 2rem 2rem; border-top: 1px solid rgba(255,255,255,0.03); animation: fadeIn 0.3s ease;">
+          `;
           
           for (const a in grouped[m]) {
-            html += `<div class="assunto-block" style="margin-left: 0.5rem; margin-bottom: 2rem; border-left: 2px solid var(--dashboard-bg2); padding-left: 1.5rem;">
-                       <h3 style="font-size: 1.5rem; color: var(--text); margin-bottom: 1.2rem; font-weight: 600;">${a}</h3>`;
+            html += `<div class="assunto-block" style="margin-left: 0.5rem; margin-top: 1.5rem; border-left: 2px solid var(--dashboard-bg2); padding-left: 1.5rem;">
+                       <h3 style="font-size: 1.3rem; color: var(--text); margin-bottom: 1rem; font-weight: 600;">${a}</h3>`;
                        
             for (const s in grouped[m][a]) {
               if (s !== 'Geral' && s !== '') {
-                html += `<h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 1rem; margin-left: 0.5rem; font-weight: 500;">➤ ${s}</h4>`;
+                html += `<h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 0.8rem; margin-left: 0.5rem; font-weight: 500;">➤ ${s}</h4>`;
               }
               
-              html += `<div class="grid" style="margin-left: 0.5rem; margin-bottom: 1.5rem;">`;
+              html += `<div class="grid" style="margin-left: 0.5rem; margin-bottom: 1.2rem;">`;
               grouped[m][a][s].forEach(c => {
                 html += `
-                  <div class="card content-card" onclick="openStudy('${c._id}', '${c.titulo}', '${c.url || ''}')" style="background: var(--dashboard-bg3);">
+                  <div class="card content-card" onclick="openStudy('${c._id}', '${c.titulo}', '${c.url || ''}')" style="background: var(--dashboard-bg3); margin-bottom: 0px; cursor: pointer;">
                     <span class="tag" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc;">${c.tipo.toUpperCase()}</span>
-                    <h3 style="margin-bottom: 8px; font-size: 1.2rem;">${c.titulo}</h3>
-                    <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; margin-top: auto;">
-                      <span style="color: var(--primary); font-size: 0.85rem; font-weight: 600;">Iniciar &rarr;</span>
+                    <h3 style="margin-bottom: 8px; font-size: 1.15rem;">${c.titulo}</h3>
+                    <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid var(--border); padding-top: 0.8rem; margin-top: auto;">
+                      <span style="color: var(--primary); font-size: 0.8rem; font-weight: 600;">Iniciar &rarr;</span>
                     </div>
                   </div>
                 `;
@@ -200,7 +215,7 @@
             }
             html += `</div>`;
           }
-          html += `</div>`;
+          html += `</div></div>`;
         }
         
         listContainer.innerHTML = html;
@@ -208,6 +223,20 @@
 
       } catch (err) {
         App.showToast('Falha ao sincronizar conteúdos.', true);
+      }
+    }
+
+    function toggleMateria(id) {
+      const content = document.getElementById(`content-${id}`);
+      const icon = document.getElementById(`icon-${id}`);
+      const isOpen = content.style.display === 'block';
+      
+      if (isOpen) {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(180deg)';
       }
     }
 

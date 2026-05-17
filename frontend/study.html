@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Mozilla PDF.js e PDF-Lib para Visualizador customizado e marcas d'água robustas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -352,6 +356,147 @@
         padding: 1.5rem;
       }
     }
+
+    /* Se o painel de mídia estiver ativo, esconde o fechar duplicado da direita */
+    .immersive-container:not(.no-media) .focus-close-btn {
+      display: none !important;
+    }
+
+    /* Custom PDF Viewer Styles */
+    .custom-pdf-viewer {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      background: #050506;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .pdf-toolbar {
+      background: rgba(12, 12, 14, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .pdf-page-indicator {
+      font-size: 0.85rem;
+      color: #a1a1aa;
+      font-weight: 500;
+    }
+
+    .pdf-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pdf-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #a1a1aa;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .pdf-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #fafafa;
+    }
+
+    .pdf-btn-download {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+    }
+
+    .pdf-btn-download:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(236, 72, 153, 0.25) 100%);
+      border-color: rgba(99, 102, 241, 0.5);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+    }
+
+    .pdf-zoom-text {
+      font-size: 0.8rem;
+      color: #71717a;
+      width: 45px;
+      text-align: center;
+    }
+
+    .pdf-separator {
+      width: 1px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 0 4px;
+    }
+
+    .pdf-canvas-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+      background: #050506;
+      scroll-behavior: smooth;
+    }
+
+    .pdf-canvas-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .pdf-canvas-container::-webkit-scrollbar-track {
+      background: #050506;
+    }
+    .pdf-canvas-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+    }
+    .pdf-canvas-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .pdf-page-wrapper {
+      position: relative;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease;
+      background: #ffffff;
+    }
+
+    .pdf-page-wrapper:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .pdf-page-canvas {
+      display: block;
+      max-width: 100%;
+      height: auto !important;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -362,9 +507,19 @@
     <!-- Painel de Mídia (Esquerda) -->
     <div class="media-panel" id="mediaPanel">
       <div class="media-header">
-        <div class="media-title-area">
-          <span class="media-badge" id="materiaBadge">Carregando...</span>
-          <h1 id="contentTitle" style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #ffffff;">Carregando Missão...</h1>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <!-- Botão Sair/Voltar no Cabeçalho do Material (X do lado da disciplina) -->
+          <button class="btn-circle media-close-btn" onclick="window.location.href='dashboard.html'" title="Sair do Modo Imersivo" style="flex-shrink: 0;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          
+          <div class="media-title-area">
+            <span class="media-badge" id="materiaBadge">Carregando...</span>
+            <h1 id="contentTitle" style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #ffffff;">Carregando Missão...</h1>
+          </div>
         </div>
         
         <!-- Toggle para Tela Cheia do PDF -->
@@ -393,7 +548,7 @@
       
       <!-- Topbar do Cronômetro -->
       <div class="focus-header">
-        <button class="btn-circle" onclick="window.location.href='dashboard.html'" title="Sair do Modo Imersivo">
+        <button class="btn-circle focus-close-btn" onclick="window.location.href='dashboard.html'" title="Sair do Modo Imersivo">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -510,6 +665,13 @@
       }
     };
 
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    let currentPdfDoc = null;
+    let pdfScale = 1.0;
+    let currentPdfUrl = '';
+    let currentPdfTitle = '';
+
     // Carregar Detalhes do Conteúdo via API
     async function loadContentDetails() {
       try {
@@ -522,20 +684,26 @@
         if (content.url && content.url.trim() !== '') {
           document.getElementById('no-media-text').style.display = 'none';
           
-          const iframe = document.createElement('iframe');
-          let finalUrl = content.url;
+          const isPdf = content.tipo === 'pdf' || content.url.startsWith('data:application/pdf') || content.url.toLowerCase().includes('.pdf');
           
-          if (content.url.includes('youtube.com/watch?v=')) {
-            finalUrl = content.url.replace('watch?v=', 'embed/');
+          if (isPdf) {
+            renderCustomPdf(content.url, content.titulo);
+          } else {
+            // Render video or other iframe
+            const iframe = document.createElement('iframe');
+            let finalUrl = content.url;
+            
+            if (content.url.includes('youtube.com/watch?v=')) {
+              finalUrl = content.url.replace('watch?v=', 'embed/');
+            }
+            
+            iframe.src = finalUrl;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.setAttribute('allowfullscreen', 'true');
+            document.getElementById('mediaViewport').appendChild(iframe);
           }
-          
-          iframe.src = finalUrl;
-          iframe.style.width = '100%';
-          iframe.style.height = '100%';
-          iframe.style.border = 'none';
-          iframe.setAttribute('allowfullscreen', 'true');
-          
-          document.getElementById('mediaViewport').appendChild(iframe);
         } else {
           // Caso NÃO haja mídia, ajusta o layout para focar 100% no Cronômetro centralizado
           document.getElementById('immersiveLayout').classList.add('no-media');
@@ -548,6 +716,252 @@
         document.getElementById('materiaBadge').innerText = 'GERAL';
         document.getElementById('immersiveLayout').classList.add('no-media');
         document.getElementById('timerExpandBtn').style.display = 'none';
+      }
+    }
+
+    async function renderCustomPdf(url, title) {
+      currentPdfUrl = url;
+      currentPdfTitle = title;
+      
+      const viewport = document.getElementById('mediaViewport');
+      viewport.innerHTML = `
+        <div class="custom-pdf-viewer">
+          <div class="pdf-toolbar">
+            <span class="pdf-page-indicator">Página <span id="pdf-current-page">1</span> de <span id="pdf-total-pages">--</span></span>
+            <div class="pdf-controls">
+              <button class="pdf-btn" onclick="pdfZoomOut()" title="Afastar">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </button>
+              <span class="pdf-zoom-text" id="pdf-zoom-level">100%</span>
+              <button class="pdf-btn" onclick="pdfZoomIn()" title="Aproximar">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </button>
+              <div class="pdf-separator"></div>
+              <button class="pdf-btn" onclick="togglePdfFullscreen()" title="Tela Cheia">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+              </button>
+              <button class="pdf-btn pdf-btn-download" onclick="downloadWatermarkedPdf()" title="Baixar PDF com Marca d'Água">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Baixar</span>
+              </button>
+            </div>
+          </div>
+          <div class="pdf-canvas-container" id="pdf-canvas-container">
+            <p class="text-muted" style="margin-top: 2rem;">Abrindo material imersivo...</p>
+          </div>
+        </div>
+      `;
+
+      try {
+        let loadingTask;
+        if (url.startsWith('data:application/pdf;base64,')) {
+          const base64Str = url.split(',')[1];
+          const raw = window.atob(base64Str);
+          const rawLength = raw.length;
+          const array = new Uint8Array(new ArrayBuffer(rawLength));
+          for (let i = 0; i < rawLength; i++) {
+            array[i] = raw.charCodeAt(i);
+          }
+          loadingTask = pdfjsLib.getDocument({ data: array });
+        } else {
+          loadingTask = pdfjsLib.getDocument(url);
+        }
+
+        currentPdfDoc = await loadingTask.promise;
+        document.getElementById('pdf-total-pages').innerText = currentPdfDoc.numPages;
+        
+        renderPdfPages();
+      } catch (err) {
+        console.error('Erro ao renderizar PDF:', err);
+        document.getElementById('pdf-canvas-container').innerHTML = `
+          <div style="text-align: center; margin-top: 3rem; padding: 2rem;">
+            <p class="text-muted" style="color: var(--danger) !important; margin-bottom: 15px;">
+              Falha ao carregar o leitor de PDF customizado.
+            </p>
+            <button class="btn btn-primary" onclick="window.open('${url}', '_blank')">Abrir no Visualizador Padrão</button>
+          </div>
+        `;
+      }
+    }
+
+    async function renderPdfPages() {
+      const container = document.getElementById('pdf-canvas-container');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      const numPages = currentPdfDoc.numPages;
+      const pagesPromises = [];
+
+      for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+        const pageWrapper = document.createElement('div');
+        pageWrapper.className = 'pdf-page-wrapper';
+        pageWrapper.id = `pdf-page-wrapper-${pageNum}`;
+        pageWrapper.dataset.pageNum = pageNum;
+        
+        const canvas = document.createElement('canvas');
+        canvas.className = 'pdf-page-canvas';
+        pageWrapper.appendChild(canvas);
+        container.appendChild(pageWrapper);
+
+        pagesPromises.push(renderSinglePage(pageNum, canvas));
+      }
+
+      await Promise.all(pagesPromises);
+
+      // Intersection Observer para rastrear qual página está visível
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const pageNum = entry.target.dataset.pageNum;
+            const currentPageElem = document.getElementById('pdf-current-page');
+            if (currentPageElem) currentPageElem.innerText = pageNum;
+          }
+        });
+      }, {
+        root: container,
+        threshold: 0.4
+      });
+
+      document.querySelectorAll('.pdf-page-wrapper').forEach(wrapper => {
+        observer.observe(wrapper);
+      });
+    }
+
+    async function renderSinglePage(pageNum, canvas) {
+      try {
+        const page = await currentPdfDoc.getPage(pageNum);
+        const ctx = canvas.getContext('2d');
+        
+        const unscaledViewport = page.getViewport({ scale: 1.0 });
+        const containerWidth = document.getElementById('pdf-canvas-container').clientWidth - 60;
+        const dynamicScale = (containerWidth / unscaledViewport.width) * pdfScale;
+        
+        const viewport = page.getViewport({ scale: dynamicScale });
+        
+        const outputScale = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(viewport.width * outputScale);
+        canvas.height = Math.floor(viewport.height * outputScale);
+        canvas.style.width = Math.floor(viewport.width) + "px";
+        canvas.style.height = Math.floor(viewport.height) + "px";
+        
+        const transform = outputScale !== 1
+          ? [outputScale, 0, 0, outputScale, 0, 0]
+          : null;
+
+        const renderContext = {
+          canvasContext: ctx,
+          transform: transform,
+          viewport: viewport
+        };
+        
+        await page.render(renderContext).promise;
+      } catch (err) {
+        console.error(`Erro ao renderizar página ${pageNum}:`, err);
+      }
+    }
+
+    function pdfZoomIn() {
+      if (pdfScale >= 2.0) return;
+      pdfScale = parseFloat((pdfScale + 0.15).toFixed(2));
+      document.getElementById('pdf-zoom-level').innerText = Math.round(pdfScale * 100) + '%';
+      renderPdfPages();
+    }
+
+    function pdfZoomOut() {
+      if (pdfScale <= 0.6) return;
+      pdfScale = parseFloat((pdfScale - 0.15).toFixed(2));
+      document.getElementById('pdf-zoom-level').innerText = Math.round(pdfScale * 100) + '%';
+      renderPdfPages();
+    }
+
+    async function downloadWatermarkedPdf() {
+      const btn = document.querySelector('.pdf-btn-download');
+      if (!btn) return;
+      
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" style="animation: spin 1s linear infinite; margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.1)" stroke-width="2.5"></circle><path d="M4 12a8 8 0 0 1 8-8" fill="currentColor"></path></svg> <span>Gerando...</span>`;
+
+      try {
+        const { PDFDocument, rgb, degrees, StandardFonts } = PDFLib;
+        
+        let pdfBytes;
+        if (currentPdfUrl.startsWith('data:application/pdf;base64,')) {
+          const base64Data = currentPdfUrl.split(',')[1];
+          pdfBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+        } else {
+          const response = await fetch(currentPdfUrl);
+          pdfBytes = new Uint8Array(await response.arrayBuffer());
+        }
+
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+        const pages = pdfDoc.getPages();
+
+        for (const page of pages) {
+          const { width, height } = page.getSize();
+
+          // 1. Marca d'Água Central Diagonal (ENEMFLOW)
+          page.drawText('ENEMFLOW', {
+            x: width / 2 - 120,
+            y: height / 2 - 40,
+            size: 44,
+            font: boldFont,
+            color: rgb(0.39, 0.4, 0.95), // #6366f1
+            opacity: 0.07,
+            rotate: degrees(35),
+          });
+
+          // 2. Linha divisória fina do rodapé
+          page.drawLine({
+            start: { x: 30, y: 35 },
+            end: { x: width - 30, y: 35 },
+            thickness: 0.5,
+            color: rgb(0.8, 0.8, 0.8),
+            opacity: 0.2,
+          });
+
+          // 3. Rodapé de Direitos e Incentivo
+          page.drawText('Material de Apoio Oficial EnemFlow • Bons Estudos!', {
+            x: 30,
+            y: 20,
+            size: 8,
+            font: font,
+            color: rgb(0.63, 0.63, 0.67), // #a1a1aa
+            opacity: 0.8,
+          });
+
+          page.drawText('Aprovação em 1º Lugar 🚀', {
+            x: width - 150,
+            y: 20,
+            size: 8,
+            font: boldFont,
+            color: rgb(0.93, 0.28, 0.6), // #ec4899 (Pink)
+            opacity: 0.85,
+          });
+        }
+
+        const savedBytes = await pdfDoc.save();
+        const blob = new Blob([savedBytes], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${currentPdfTitle || 'Material'}_EnemFlow.pdf`;
+        link.click();
+        
+        App.showToast('PDF com marca d\'água baixado com sucesso!');
+      } catch (err) {
+        console.error('Erro ao processar marca d\'água do PDF:', err);
+        App.showToast('Erro ao aplicar marca d\'água. Baixando PDF original...', true);
+        
+        const link = document.createElement('a');
+        link.href = currentPdfUrl;
+        link.download = `${currentPdfTitle || 'Material'}_EnemFlow.pdf`;
+        link.click();
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
       }
     }
 

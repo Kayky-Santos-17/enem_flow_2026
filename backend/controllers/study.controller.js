@@ -26,7 +26,12 @@ exports.end = async (req, res) => {
       return res.status(400).json({ error: 'startTime e contentId são obrigatórios.' });
     }
 
-    const duracao = Math.max(0, Math.floor((Date.now() - startTime) / 1000)); // em segundos
+    const startTimestamp = Number(startTime);
+    if (isNaN(startTimestamp) || startTimestamp <= 0 || startTimestamp > Date.now()) {
+      return res.status(400).json({ error: 'startTime inválido ou corrompido.' });
+    }
+
+    const duracao = Math.max(0, Math.floor((Date.now() - startTimestamp) / 1000)); // em segundos
     // 10 XP a cada 1 hora (3600 segundos). Logo, 1 XP a cada 360 segundos (6 minutos de foco).
     const xpGanho = Math.floor(duracao / 360);
 
@@ -44,7 +49,7 @@ exports.end = async (req, res) => {
         contentId, 
         duracao, 
         xpGanho, 
-        iniciadaEm: new Date(startTime),
+        iniciadaEm: new Date(startTimestamp),
         encerradaEm: new Date() 
       });
 

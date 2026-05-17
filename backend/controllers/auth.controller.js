@@ -220,7 +220,12 @@ exports.deleteUser = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ error: 'E-mail é obrigatório.' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
 
     if (!user) {
       return res.status(404).json({ error: 'E-mail não encontrado.' });
@@ -249,6 +254,14 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     const { token, novaSenha } = req.body;
+
+    if (!token || typeof token !== 'string') {
+      return res.status(400).json({ error: 'Token de recuperação é obrigatório.' });
+    }
+
+    if (!novaSenha || typeof novaSenha !== 'string' || novaSenha.length < 6) {
+      return res.status(400).json({ error: 'A nova senha deve ter no mínimo 6 caracteres.' });
+    }
 
     const user = await User.findOne({
       resetPasswordToken: token,
