@@ -273,7 +273,7 @@
       <!-- Subject Hero Header -->
       <div style="margin-top: 2.5rem; margin-bottom: 3rem; display: flex; flex-direction: column; gap: 10px;">
         <span class="tag" id="lessonCountBadge" style="background: rgba(99, 102, 241, 0.1); color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; width: fit-content; border: 1px solid rgba(99, 102, 241, 0.2);">Carregando...</span>
-        <h1 id="subjectTitle" class="text-gradient" style="font-size: 3.5rem; font-weight: 800; margin: 0; letter-spacing: -0.03em; line-height: 1.1; font-family: 'Outfit';">Disciplina</h1>
+        <h1 id="subjectTitle" class="text-gradient" style="font-size: 3.5rem; font-weight: 800; margin: 0; letter-spacing: -0.03em; line-height: 1.1; font-family: 'Plus Jakarta Sans', 'Outfit', 'Sora', sans-serif;">Disciplina</h1>
       </div>
 
       <!-- Topics list container -->
@@ -293,11 +293,12 @@
     function getSubjectColors(subjectName) {
       const s = subjectName.toLowerCase();
       if (s.includes('mat')) return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', badge: 'rgba(99, 102, 241, 0.2)', text: '#a5b4fc', border: '#4338ca' };
-      if (s.includes('port') || s.includes('red') || s.includes('lin') || s.includes('art')) return { grad: 'linear-gradient(135deg, #4c0519 0%, #881337 100%)', badge: 'rgba(244, 63, 94, 0.2)', text: '#fda4af', border: '#be123c' };
+      if (s.includes('port') || s.includes('red') || s.includes('lin')) return { grad: 'linear-gradient(135deg, #4c0519 0%, #881337 100%)', badge: 'rgba(244, 63, 94, 0.2)', text: '#fda4af', border: '#be123c' };
+      if (s.includes('art')) return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%)', badge: 'rgba(168, 85, 247, 0.2)', text: '#c084fc', border: '#a855f7' };
       if (s.includes('fis') || s.includes('quim') || s.includes('cie') || s.includes('bio') || s.includes('natureza')) return { grad: 'linear-gradient(135deg, #022c22 0%, #064e3b 100%)', badge: 'rgba(16, 185, 129, 0.2)', text: '#a7f3d0', border: '#047857' };
       if (s.includes('hist') || s.includes('geog') || s.includes('hum') || s.includes('filo') || s.includes('socio')) return { grad: 'linear-gradient(135deg, #451a03 0%, #78350f 100%)', badge: 'rgba(245, 158, 11, 0.2)', text: '#fde68a', border: '#b45309' };
-      // Default: premium brand gradient (indigo to rose)
-      return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #4c0519 100%)', badge: 'rgba(99, 102, 241, 0.2)', text: '#fda4af', border: '#ec4899' };
+      // Default: premium violet brand gradient
+      return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%)', badge: 'rgba(168, 85, 247, 0.2)', text: '#c084fc', border: '#a855f7' };
     }
 
     async function loadProfile() {

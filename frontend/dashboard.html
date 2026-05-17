@@ -188,11 +188,12 @@
     function getSubjectColors(subjectName) {
       const s = subjectName.toLowerCase();
       if (s.includes('mat')) return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', badge: 'rgba(99, 102, 241, 0.2)', text: '#a5b4fc', border: '#4338ca' };
-      if (s.includes('port') || s.includes('red') || s.includes('lin') || s.includes('art')) return { grad: 'linear-gradient(135deg, #4c0519 0%, #881337 100%)', badge: 'rgba(244, 63, 94, 0.2)', text: '#fda4af', border: '#be123c' };
+      if (s.includes('port') || s.includes('red') || s.includes('lin')) return { grad: 'linear-gradient(135deg, #4c0519 0%, #881337 100%)', badge: 'rgba(244, 63, 94, 0.2)', text: '#fda4af', border: '#be123c' };
+      if (s.includes('art')) return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%)', badge: 'rgba(168, 85, 247, 0.2)', text: '#c084fc', border: '#a855f7' };
       if (s.includes('fis') || s.includes('quim') || s.includes('cie') || s.includes('bio') || s.includes('natureza')) return { grad: 'linear-gradient(135deg, #022c22 0%, #064e3b 100%)', badge: 'rgba(16, 185, 129, 0.2)', text: '#a7f3d0', border: '#047857' };
       if (s.includes('hist') || s.includes('geog') || s.includes('hum') || s.includes('filo') || s.includes('socio')) return { grad: 'linear-gradient(135deg, #451a03 0%, #78350f 100%)', badge: 'rgba(245, 158, 11, 0.2)', text: '#fde68a', border: '#b45309' };
-      // Default: premium brand gradient (indigo to rose)
-      return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #4c0519 100%)', badge: 'rgba(99, 102, 241, 0.2)', text: '#fda4af', border: '#ec4899' };
+      // Default: premium violet brand gradient
+      return { grad: 'linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%)', badge: 'rgba(168, 85, 247, 0.2)', text: '#c084fc', border: '#a855f7' };
     }
 
     async function loadContents() {
@@ -226,7 +227,7 @@
                 <span class="tag" style="background: ${colors.badge}; color: ${colors.text}; border: 1px solid ${colors.border}22; font-size: 0.72rem; font-weight: 800; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; display: inline-block;">
                   ${count} ${count === 1 ? 'Aula' : 'Aulas'}
                 </span>
-                <h2 class="subject-title" style="font-size: 2.1rem; font-weight: 800; color: ${colors.text}; text-shadow: 0 4px 15px ${colors.border}44; margin-top: 1rem; margin-bottom: 0.5rem; transition: color 0.2s ease; font-family: 'Outfit';">
+                <h2 class="subject-title" style="font-size: 2.1rem; font-weight: 800; color: ${colors.text}; text-shadow: 0 4px 15px ${colors.border}44; margin-top: 1rem; margin-bottom: 0.5rem; transition: color 0.2s ease; font-family: 'Plus Jakarta Sans', 'Outfit', 'Sora', sans-serif;">
                   ${m}
                 </h2>
                 <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; max-width: 280px; margin: 0; font-family: 'Inter', sans-serif;">
