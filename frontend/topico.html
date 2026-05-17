@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EnemFlow - Assunto</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: transform 0.25s ease, color 0.25s ease;
+      margin-bottom: 1.5rem;
+    }
+    
+    .back-btn:hover {
+      color: var(--secondary);
+      transform: translateX(-3px);
+    }
+    
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .lesson-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 200px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .lesson-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99, 102, 241, 0.25);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .resource-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      width: 100%;
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .pdf-btn {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #818cf8;
+    }
+    .pdf-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+    
+    .video-btn {
+      background: rgba(236, 72, 153, 0.08);
+      border: 1px solid rgba(236, 72, 153, 0.25);
+      color: #f472b6;
+    }
+    .video-btn:hover {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+    }
+
+    .subtopic-title {
+      font-size: 1.05rem;
+      color: var(--secondary);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      padding-bottom: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-enter"></div>
+
+  <div class="app-container">
+    
+    <!-- Barra de Topo Mobile -->
+    <div class="mobile-top-actions" style="display: none; justify-content: center;">
+      <div class="sidebar-logo" style="margin: 0; padding: 0;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#gradMobile)" stroke-width="2">
+          <defs>
+            <linearGradient id="gradMobile" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span>EnemFlow</span>
+      </div>
+
+      <nav>
+        <a href="dashboard.html" class="nav-link">
+          <svg><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Cronograma
+        </a>
+        <a href="foco.html" class="nav-link">
+          <svg><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Foco
+        </a>
+      </nav>
+
+      <div style="flex: 1;"></div>
+
+      <button class="btn btn-danger" onclick="App.logout()">Sair</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Topbar / Header -->
+      <header class="topbar">
+        <div>
+          <h2>Trilha de Assuntos</h2>
+          <p class="text-muted">Acesse materiais, PDFs e vídeo aulas preparatórias.</p>
+        </div>
+
+        <div class="xp-badge">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span id="userXP">0</span> XP
+        </div>
+      </header>
+
+      <!-- Voltar -->
+      <a href="#" id="backToSubjectLink" class="back-btn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Voltar para disciplina
+      </a>
+
+      <!-- Assunto Hero Header -->
+      <div style="margin-top: 1rem; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 8px;">
+        <span class="tag" id="lessonsCountBadge" style="background: rgba(99, 102, 241, 0.1); color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; width: fit-content; border: 1px solid rgba(99, 102, 241, 0.2);">Aulas</span>
+        <h1 id="topicTitle" class="text-gradient" style="font-size: 3.25rem; font-weight: 800; margin: 0; letter-spacing: -0.03em; line-height: 1.1; font-family: 'Outfit';">Tópico</h1>
+      </div>
+
+      <!-- Lessons list container -->
+      <div id="lessons-container">
+        <!-- Renderizado dinamicamente -->
+      </div>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if (!App.getToken()) window.location.href = 'login.html';
+
+    const params = new URLSearchParams(window.location.search);
+    const subjectName = params.get('subject') || 'Geral';
+    const topicName = params.get('topic') || 'Geral';
+
+    // Ajusta o link de voltar dinamicamente
+    const backLink = document.getElementById('backToSubjectLink');
+    backLink.href = `materia.html?subject=${encodeURIComponent(subjectName)}`;
+    backLink.innerHTML = `
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px; vertical-align: middle;">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Voltar para ${subjectName}
+    `;
+
+    document.getElementById('topicTitle').innerText = topicName;
+
+    async function loadProfile() {
+      try {
+        const user = await App.api('/auth/me');
+        document.getElementById('userXP').innerText = user.xp;
+      } catch (err) {
+        if (err.message.includes('Sessão') || err.message.includes('Token')) App.logout();
+      }
+    }
+
+    async function loadTopicContents() {
+      try {
+        const container = document.getElementById('lessons-container');
+        container.innerHTML = '<p class="text-muted">Buscando aulas do assunto...</p>';
+
+        const contents = await App.api('/contents');
+        
+        // Filtra conteúdos desta matéria e deste assunto
+        const filtered = contents.filter(c => 
+          (c.materia || 'Geral').toLowerCase() === subjectName.toLowerCase() &&
+          (c.assunto || 'Geral').toLowerCase() === topicName.toLowerCase()
+        );
+
+        document.getElementById('lessonsCountBadge').innerText = filtered.length + (filtered.length === 1 ? ' Aula Disponível' : ' Aulas Disponíveis');
+
+        if (filtered.length === 0) {
+          container.innerHTML = '<p class="text-muted">Nenhuma aula disponível para este assunto ainda.</p>';
+          return;
+        }
+
+        // Agrupa por Subassunto
+        const grouped = {};
+        filtered.forEach(c => {
+          const s = c.subassunto || 'Geral';
+          if (!grouped[s]) grouped[s] = [];
+          grouped[s].push(c);
+        });
+
+        let html = '';
+        for (const s in grouped) {
+          if (s !== 'Geral' && s !== '') {
+            html += `
+              <div class="subtopic-title">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+                <span>${s}</span>
+              </div>
+            `;
+          }
+
+          html += `<div class="cards-grid">`;
+          grouped[s].forEach(c => {
+            const hasVideo = !!(c.videoUrl || c.video);
+            const videoUrl = c.videoUrl || c.video || '#';
+
+            html += `
+              <div class="lesson-card">
+                <div>
+                  <span class="tag" style="background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid var(--border); font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
+                    ${c.tipo.toUpperCase()}
+                  </span>
+                  <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin-top: 10px; margin-bottom: 1.5rem; line-height: 1.35;">${c.titulo}</h3>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <button class="resource-btn pdf-btn" onclick="openStudy('${c._id}')">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    Ler Apostila (PDF)
+                  </button>
+                  
+                  ${hasVideo ? `
+                    <button class="resource-btn video-btn" onclick="window.open('${videoUrl}', '_blank')">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                      Assistir Vídeo Aula
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+
+        container.innerHTML = html;
+
+      } catch (err) {
+        App.showToast('Erro ao carregar aulas do assunto: ' + err.message, true);
+      }
+    }
+
+    function openStudy(id) {
+      localStorage.setItem('currentContentId', id);
+      window.location.href = 'study.html';
+    }
+
+    loadProfile();
+    loadTopicContents();
+  </script>
+</body>
+</html>
