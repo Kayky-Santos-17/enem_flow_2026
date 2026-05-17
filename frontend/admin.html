@@ -115,16 +115,10 @@
                 </select>
               </div>
               <div class="input-group">
-                <input type="text" id="titulo" placeholder="Título da Aula (ex: Teorema de Pitágoras)" required>
+                <input type="text" id="assunto" placeholder="Assunto" required>
               </div>
               <div class="input-group">
-                <input type="text" id="descricao" placeholder="Pequena descrição ou resumo" required>
-              </div>
-              <div class="input-group">
-                <input type="text" id="assunto" placeholder="Assunto (ex: Geometria Plana)" required>
-              </div>
-              <div class="input-group">
-                <input type="text" id="subassunto" placeholder="Tópico (ex: Artrópodes) - Opcional">
+                <input type="text" id="subassunto" placeholder="Tópico (Opcional)">
               </div>
               <div class="input-group">
                 <select id="tipo" required>
@@ -315,12 +309,15 @@
           finalUrl = uploadData.url;
         }
 
+        const assuntoValue = document.getElementById('assunto').value;
+        const subassuntoValue = document.getElementById('subassunto').value;
+
         const payload = {
-          titulo: document.getElementById('titulo').value,
-          descricao: document.getElementById('descricao').value,
+          titulo: subassuntoValue || assuntoValue,
+          descricao: '',
           materia: document.getElementById('materia').value,
-          assunto: document.getElementById('assunto').value,
-          subassunto: document.getElementById('subassunto').value,
+          assunto: assuntoValue,
+          subassunto: subassuntoValue,
           tipo: document.getElementById('tipo').value,
           url: finalUrl
         };
